@@ -307,6 +307,11 @@ are what the runner and agents inject prompts into.
 
 ---
 
+## Changelog
+
+Every meaningful change lands in [`CHANGELOG.md`](CHANGELOG.md). If you're
+picking this up after a workshop cohort, check there for what moved.
+
 ## License
 
 MIT — see [LICENSE](LICENSE). Fork it, adapt it for your studio or course.
