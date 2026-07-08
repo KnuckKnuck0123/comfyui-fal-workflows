@@ -1,0 +1,9 @@
+# The runner (run_fal_workflow.py) uses only the Python standard library.
+# These deps are for the ComfyUI custom nodes the workflows depend on.
+# ComfyUI itself installs its own requirements separately.
+
+# Fal custom nodes
+fal-client>=0.4.0
+
+# Nano Banana / Gemini
+google-genai>=0.3.0

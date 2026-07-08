@@ -1,0 +1,33 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "PARAM_IMAGE"
+    },
+    "_meta": { "title": "Load Input (screenshot/sketch)" }
+  },
+  "2": {
+    "class_type": "FluxProKontext_fal",
+    "inputs": {
+      "prompt": "PARAM_PROMPT",
+      "image": ["1", 0],
+      "aspect_ratio": "16:9",
+      "max_quality": false,
+      "guidance_scale": 3.5,
+      "num_images": 1,
+      "safety_tolerance": "2",
+      "output_format": "png",
+      "sync_mode": false,
+      "seed": 0
+    },
+    "_meta": { "title": "Flux Pro Kontext (fal)" }
+  },
+  "3": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "render_kontext",
+      "images": ["2", 0]
+    },
+    "_meta": { "title": "Save Image" }
+  }
+}

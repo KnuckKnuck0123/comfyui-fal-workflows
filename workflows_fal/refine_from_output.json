@@ -1,0 +1,27 @@
+{
+  "1": {
+    "class_type": "LoadImageOutput",
+    "inputs": {
+      "image": "PARAM_IMAGE"
+    },
+    "_meta": { "title": "Load Prior Output" }
+  },
+  "2": {
+    "class_type": "NanoBanana API\ud83c\udf4c",
+    "inputs": {
+      "image": ["1", 0],
+      "prompt": "PARAM_PROMPT",
+      "model_name": "gemini-3.1-flash-image",
+      "api_key": ""
+    },
+    "_meta": { "title": "Refine" }
+  },
+  "3": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "refine_iter",
+      "images": ["2", 0]
+    },
+    "_meta": { "title": "Save Image" }
+  }
+}

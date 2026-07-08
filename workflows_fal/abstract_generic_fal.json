@@ -1,0 +1,21 @@
+{
+  "1": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "fal-ai/z-image/turbo",
+      "prompt": "PARAM_PROMPT",
+      "seed": -1,
+      "aspect_ratio": "16:9",
+      "extra_arguments": "{}"
+    },
+    "_meta": { "title": "Fal Generic API (swappable: z-image / ideogram / flux-2)" }
+  },
+  "2": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "abstract_generic",
+      "images": ["1", 0]
+    },
+    "_meta": { "title": "Save Image" }
+  }
+}

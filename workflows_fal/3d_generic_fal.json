@@ -1,0 +1,29 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": { "image": "PARAM_IMAGE" },
+    "_meta": { "title": "Load Source Image" }
+  },
+  "2": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "fal-ai/trellis-2",
+      "prompt": "",
+      "image_1": ["1", 0],
+      "seed": -1,
+      "aspect_ratio": "auto",
+      "extra_arguments": "{}"
+    },
+    "_meta": { "title": "Fal 3D - swappable endpoint" }
+  },
+  "3": {
+    "class_type": "SaveStringKJ",
+    "inputs": {
+      "string": ["2", 1],
+      "filename_prefix": "3d_generic",
+      "output_folder": "output",
+      "file_extension": ".txt"
+    },
+    "_meta": { "title": "Save 3D URL" }
+  }
+}

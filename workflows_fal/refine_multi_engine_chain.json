@@ -1,0 +1,55 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "PARAM_IMAGE"
+    },
+    "_meta": { "title": "Load Input" }
+  },
+  "2": {
+    "class_type": "FluxProKontext_fal",
+    "inputs": {
+      "prompt": "PARAM_PROMPT",
+      "image": ["1", 0],
+      "aspect_ratio": "16:9",
+      "max_quality": false,
+      "guidance_scale": 3.5,
+      "num_images": 1,
+      "safety_tolerance": "2",
+      "output_format": "png",
+      "sync_mode": false,
+      "seed": 0
+    },
+    "_meta": { "title": "Stage 1: Flux Kontext" }
+  },
+  "3": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "fal-ai/flux-2/edit",
+      "prompt": "PARAM_PROMPT_2",
+      "image_1": ["2", 0],
+      "seed": -1,
+      "aspect_ratio": "auto",
+      "extra_arguments": "{}"
+    },
+    "_meta": { "title": "Stage 2: any Fal /edit endpoint" }
+  },
+  "4": {
+    "class_type": "NanoBanana API\ud83c\udf4c",
+    "inputs": {
+      "image": ["3", 0],
+      "prompt": "PARAM_PROMPT_3",
+      "model_name": "gemini-3.1-flash-image",
+      "api_key": ""
+    },
+    "_meta": { "title": "Stage 3: Nano Banana polish" }
+  },
+  "5": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "refine_multi",
+      "images": ["4", 0]
+    },
+    "_meta": { "title": "Save Image" }
+  }
+}

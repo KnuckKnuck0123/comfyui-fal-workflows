@@ -1,0 +1,47 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "PARAM_IMAGE"
+    },
+    "_meta": { "title": "Load Input (screenshot/sketch)" }
+  },
+  "2": {
+    "class_type": "NanoBanana API\ud83c\udf4c",
+    "inputs": {
+      "image": ["1", 0],
+      "prompt": "PARAM_PROMPT",
+      "model_name": "gemini-3.1-flash-image",
+      "api_key": ""
+    },
+    "_meta": { "title": "Stage 1: initial render" }
+  },
+  "3": {
+    "class_type": "NanoBanana API\ud83c\udf4c",
+    "inputs": {
+      "image": ["2", 0],
+      "prompt": "PARAM_PROMPT_2",
+      "model_name": "gemini-3.1-flash-image",
+      "api_key": ""
+    },
+    "_meta": { "title": "Stage 2: refinement" }
+  },
+  "4": {
+    "class_type": "NanoBanana API\ud83c\udf4c",
+    "inputs": {
+      "image": ["3", 0],
+      "prompt": "PARAM_PROMPT_3",
+      "model_name": "gemini-3.1-flash-image",
+      "api_key": ""
+    },
+    "_meta": { "title": "Stage 3: final polish" }
+  },
+  "5": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "refine_chain",
+      "images": ["4", 0]
+    },
+    "_meta": { "title": "Save Image" }
+  }
+}

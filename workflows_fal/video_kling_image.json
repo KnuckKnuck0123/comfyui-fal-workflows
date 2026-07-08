@@ -1,0 +1,48 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": { "image": "PARAM_IMAGE" },
+    "_meta": { "title": "Load Source Image" }
+  },
+  "2": {
+    "class_type": "KlingPro16_fal",
+    "inputs": {
+      "prompt": "PARAM_PROMPT",
+      "duration": "5",
+      "aspect_ratio": "16:9",
+      "image": ["1", 0]
+    },
+    "_meta": { "title": "Kling Pro 1.6 Image-to-Video" }
+  },
+  "3": {
+    "class_type": "SaveStringKJ",
+    "inputs": {
+      "string": ["2", 0],
+      "filename_prefix": "video_kling_i2v",
+      "output_folder": "output",
+      "file_extension": ".txt"
+    },
+    "_meta": { "title": "Save Kling Video URL" }
+  },
+  "4": {
+    "class_type": "LoadVideoURL",
+    "inputs": {
+      "url": ["2", 0],
+      "force_rate": 0,
+      "force_size": "Disabled",
+      "custom_width": 512,
+      "custom_height": 512,
+      "frame_load_cap": 30,
+      "skip_first_frames": 0,
+      "select_every_nth": 4
+    },
+    "_meta": { "title": "Decode video for preview" }
+  },
+  "5": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": ["4", 0]
+    },
+    "_meta": { "title": "Video Preview" }
+  }
+}

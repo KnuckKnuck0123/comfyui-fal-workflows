@@ -1,0 +1,24 @@
+{
+  "1": {
+    "class_type": "LoadVideoURL",
+    "inputs": {
+      "url": "PARAM_URL",
+      "force_rate": 0,
+      "force_size": "Disabled",
+      "custom_width": 512,
+      "custom_height": 512,
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 1
+    },
+    "_meta": { "title": "Load Video from URL" }
+  },
+  "2": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["1", 0],
+      "filename_prefix": "video_frames"
+    },
+    "_meta": { "title": "Save Frames as Images" }
+  }
+}

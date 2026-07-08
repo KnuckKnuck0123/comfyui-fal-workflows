@@ -1,0 +1,50 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": { "image": "PARAM_IMAGE" },
+    "_meta": { "title": "Load Source Image (optional for text-to-video endpoints)" }
+  },
+  "2": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "bytedance/seedance-2.0/image-to-video",
+      "prompt": "PARAM_PROMPT",
+      "image_1": ["1", 0],
+      "seed": -1,
+      "aspect_ratio": "16:9",
+      "extra_arguments": "{\"duration\": \"5\", \"resolution\": \"720p\"}"
+    },
+    "_meta": { "title": "Fal video (swappable endpoint)" }
+  },
+  "3": {
+    "class_type": "SaveStringKJ",
+    "inputs": {
+      "string": ["2", 1],
+      "filename_prefix": "video_generic",
+      "output_folder": "output",
+      "file_extension": ".txt"
+    },
+    "_meta": { "title": "Save Video URL" }
+  },
+  "4": {
+    "class_type": "LoadVideoURL",
+    "inputs": {
+      "url": ["2", 1],
+      "force_rate": 0,
+      "force_size": "Disabled",
+      "custom_width": 512,
+      "custom_height": 512,
+      "frame_load_cap": 30,
+      "skip_first_frames": 0,
+      "select_every_nth": 4
+    },
+    "_meta": { "title": "Decode video for preview" }
+  },
+  "5": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": ["4", 0]
+    },
+    "_meta": { "title": "Video Preview" }
+  }
+}

@@ -1,0 +1,382 @@
+{
+  "_comment": "Model/engine registry for run_fal_workflow.py. 'workflows' maps a friendly workflow name to its JSON file, the auth it needs, and (for FalGenericAPI-based workflows) the swappable endpoints you can pass with --endpoint. Costs: 'local' = free (your GPU), 'fal' = Fal API credits (FAL_KEY), 'gemini' = Google Gemini credits (GEMINI_API_KEY).",
+
+  "workflows": {
+    "render_kontext": {
+      "file": "render_kontext.json",
+      "purpose": "Screenshot/sketch -> photoreal render via Flux Pro Kontext.",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "FluxProKontext_fal",
+      "swappable": false
+    },
+    "render_nanobanana_gemini": {
+      "file": "render_nanobanana_gemini.json",
+      "purpose": "Screenshot/sketch -> render via official Google Nano Banana (Gemini key).",
+      "auth": "gemini",
+      "needs_image": true,
+      "engine_node": "NanoBanana API\ud83c\udf4c",
+      "swappable_field": "model_name",
+      "swappable_values": [
+        "gemini-3.1-flash-image",
+        "gemini-3.1-flash-lite-image",
+        "gemini-3-pro-image",
+        "gemini-2.5-flash-image"
+      ],
+      "note": "Current Google model IDs (as of 2026-07): gemini-3.1-flash-image = Nano Banana 2 (default), gemini-3.1-flash-lite-image = Nano Banana 2 Lite (cheaper), gemini-3-pro-image = Nano Banana Pro (top-tier), gemini-2.5-flash-image = original Nano Banana. Use the API model listing endpoint to see what your key can access."
+    },
+    "render_generic_fal": {
+      "file": "render_generic_fal.json",
+      "purpose": "Screenshot/sketch -> render via a swappable Fal edit endpoint.",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "FalGenericAPI",
+      "swappable_field": "endpoint",
+      "swappable_values": [
+        "openai/gpt-image-2/edit",
+        "fal-ai/gpt-image-1.5/edit",
+        "fal-ai/flux-2/edit",
+        "fal-ai/flux-2-pro/edit",
+        "fal-ai/flux-2-max/edit",
+        "fal-ai/flux-pro/kontext",
+        "fal-ai/flux-pro/kontext/max",
+        "fal-ai/flux-kontext/dev",
+        "fal-ai/flux/krea/image-to-image",
+        "fal-ai/flux-1/krea/image-to-image",
+        "fal-ai/flux/krea/redux",
+        "fal-ai/flux-1/krea/redux",
+        "fal-ai/flux-krea-lora/image-to-image",
+        "fal-ai/flux-krea-lora/inpainting",
+        "fal-ai/bytedance/seedream/v4/edit",
+        "fal-ai/bytedance/seedream/v4.5/edit",
+        "fal-ai/bytedance/seedream/v5/lite/edit",
+        "xai/grok-imagine-image/edit",
+        "xai/grok-imagine-image/quality/edit",
+        "fal-ai/qwen-image-edit-2511-multiple-angles"
+      ],
+      "note": "Nano Banana edits are intentionally routed through the Gemini workflow, not here. Krea/Flux image-to-image entries (flux/krea/*) accept a source image plus a text prompt."
+    },
+    "abstract_flux": {
+      "file": "abstract_flux.json",
+      "purpose": "Text-to-image abstract generation via Flux Dev.",
+      "auth": "fal",
+      "needs_image": false,
+      "engine_node": "FluxDev_fal",
+      "swappable": false
+    },
+    "abstract_generic_fal": {
+      "file": "abstract_generic_fal.json",
+      "purpose": "Text-to-image abstract via a swappable Fal endpoint.",
+      "auth": "fal",
+      "needs_image": false,
+      "engine_node": "FalGenericAPI",
+      "swappable_field": "endpoint",
+      "swappable_values": [
+        "fal-ai/z-image/turbo",
+        "ideogram/v4",
+        "fal-ai/ideogram/v3",
+        "fal-ai/flux-2",
+        "fal-ai/flux-2/turbo",
+        "fal-ai/flux-2-pro",
+        "fal-ai/flux-2/klein/9b",
+        "fal-ai/flux-pro/v1.1",
+        "fal-ai/flux-pro/v1.1-ultra",
+        "fal-ai/bytedance/seedream/v4/text-to-image",
+        "fal-ai/bytedance/seedream/v4.5/text-to-image",
+        "fal-ai/recraft/v4/pro/text-to-image",
+        "xai/grok-imagine-image",
+        "xai/grok-imagine-image/quality/text-to-image",
+        "openai/gpt-image-2"
+      ]
+    },
+    "abstract_krea": {
+      "file": "abstract_krea.json",
+      "purpose": "Text-to-image via Krea 2 family and FLUX.1 Krea collab (aesthetic-focused).",
+      "auth": "fal",
+      "needs_image": false,
+      "engine_node": "FalGenericAPI",
+      "swappable_field": "endpoint",
+      "swappable_values": [
+        "krea/v2/large/text-to-image",
+        "krea/v2/medium/text-to-image",
+        "krea/v2/medium/turbo/text-to-image",
+        "fal-ai/krea-2/turbo",
+        "fal-ai/krea-2/turbo/lora",
+        "fal-ai/flux/krea",
+        "fal-ai/flux-1/krea",
+        "fal-ai/flux-krea-lora",
+        "fal-ai/flux-krea-lora/stream"
+      ],
+      "note": "Krea 2 is strong on high prompt adherence, style transfer, and raw aesthetic. Large = best quality, Medium = balanced, Turbo = fastest. FLUX.1 Krea variants are the BFL collab with Krea. For image+text->image use the render_generic_fal workflow with fal-ai/flux/krea/image-to-image or fal-ai/flux/krea/redux."
+    },
+    "abstract_multigen": {
+      "file": "abstract_multigen.json",
+      "purpose": "Midjourney-style multi-generation: one prompt -> N image variations. Swap endpoint to test any text-to-image model with the same prompt.",
+      "auth": "fal",
+      "needs_image": false,
+      "engine_node": "FalGenericAPI",
+      "swappable_field": "endpoint",
+      "swappable_values": [
+        "fal-ai/flux-2",
+        "fal-ai/flux-2/turbo",
+        "fal-ai/flux-2-pro",
+        "fal-ai/flux/schnell",
+        "fal-ai/flux/dev",
+        "fal-ai/flux-pro/v1.1",
+        "fal-ai/flux-pro/v1.1-ultra",
+        "krea/v2/large/text-to-image",
+        "krea/v2/medium/text-to-image",
+        "fal-ai/krea-2/turbo",
+        "fal-ai/flux/krea",
+        "fal-ai/flux-1/krea",
+        "ideogram/v4",
+        "fal-ai/ideogram/v3",
+        "fal-ai/z-image/turbo",
+        "fal-ai/bytedance/seedream/v4/text-to-image",
+        "fal-ai/bytedance/seedream/v4.5/text-to-image",
+        "fal-ai/recraft/v4/pro/text-to-image",
+        "openai/gpt-image-2",
+        "xai/grok-imagine-image"
+      ],
+      "note": "The extra_arguments widget controls the batch count and resolution. Default is {\"num_images\": 4}. To also set explicit resolution: {\"num_images\": 4, \"image_size\": {\"width\": 2048, \"height\": 1152}}. All returned images are saved individually and shown together in the PreviewImage grid."
+    },
+    "refine_nanobanana_chain": {
+      "file": "refine_nanobanana_chain.json",
+      "purpose": "Iterative refinement chain (Gemini-style semantic inpainting). LoadImage -> NanoBanana#1 -> NanoBanana#2 -> NanoBanana#3 -> SaveImage. Each stage takes the previous stage's output plus a targeted prompt (e.g. 'change sky to sunset').",
+      "auth": "gemini",
+      "needs_image": true,
+      "engine_node": "NanoBanana API\ud83c\udf4c (x3)",
+      "note": "Mute (Ctrl+M) any stage nodes you want to skip. Each stage has its own prompt widget. Best for pre-planned multi-step refinement."
+    },
+    "refine_from_output": {
+      "file": "refine_from_output.json",
+      "purpose": "Interactive Gemini-style refinement: pick any prior output from ComfyUI/output/ and refine with a new prompt. Run again after each refinement.",
+      "auth": "gemini",
+      "needs_image": false,
+      "engine_node": "NanoBanana API\ud83c\udf4c",
+      "note": "Uses LoadImageOutput node - dropdown lists everything in ComfyUI/output/. Change the dropdown to the last render, change the prompt, click Run. Repeat."
+    },
+    "refine_multi_engine_chain": {
+      "file": "refine_multi_engine_chain.json",
+      "purpose": "Multi-engine 3-stage refinement chain: Flux Kontext -> any Fal /edit endpoint -> Nano Banana (Gemini). Lets you compare how different models handle each refinement step.",
+      "auth": "fal+gemini",
+      "needs_image": true,
+      "engine_node": "FluxProKontext_fal + FalGenericAPI + NanoBanana API\ud83c\udf4c",
+      "note": "Any /edit-capable Fal endpoint works in Stage 2 (fal-ai/flux-2/edit, openai/gpt-image-2/edit, fal-ai/bytedance/seedream/v4.5/edit, fal-ai/flux-pro/kontext/max, fal-ai/gemini-3-pro-image-preview/edit, etc.). Mute stages to skip them."
+    },
+    "refine_from_output_generic": {
+      "file": "refine_from_output_generic.json",
+      "purpose": "Interactive refinement via ANY Fal /edit endpoint (not just Nano Banana). Pick a prior output, choose the engine via the endpoint dropdown, prompt to refine.",
+      "auth": "fal",
+      "needs_image": false,
+      "engine_node": "FalGenericAPI",
+      "swappable_field": "endpoint",
+      "swappable_values": [
+        "fal-ai/flux-2/edit",
+        "fal-ai/flux-2-pro/edit",
+        "fal-ai/flux-2-max/edit",
+        "fal-ai/flux-pro/kontext",
+        "fal-ai/flux-pro/kontext/max",
+        "fal-ai/flux-kontext/dev",
+        "openai/gpt-image-2/edit",
+        "fal-ai/gpt-image-1.5/edit",
+        "fal-ai/bytedance/seedream/v4/edit",
+        "fal-ai/bytedance/seedream/v4.5/edit",
+        "fal-ai/bytedance/seedream/v5/lite/edit",
+        "xai/grok-imagine-image/edit",
+        "xai/grok-imagine-image/quality/edit",
+        "fal-ai/qwen-image-edit-2511-multiple-angles",
+        "fal-ai/gemini-3-pro-image-preview/edit"
+      ]
+    },
+    "abstract_i2i": {
+      "file": "abstract_i2i.json",
+      "purpose": "Image-to-image abstract restyle via a swappable Fal edit endpoint.",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "FalGenericAPI",
+      "swappable_field": "endpoint",
+      "swappable_values": [
+        "fal-ai/flux-2/edit",
+        "fal-ai/flux-2-pro/edit",
+        "fal-ai/flux-2-max/edit",
+        "fal-ai/flux-2/klein/9b/edit",
+        "fal-ai/flux-pro/kontext",
+        "fal-ai/flux-pro/kontext/max",
+        "fal-ai/flux-kontext/dev",
+        "fal-ai/bytedance/seedream/v4/edit",
+        "fal-ai/bytedance/seedream/v4.5/edit",
+        "fal-ai/bytedance/seedream/v5/lite/edit",
+        "openai/gpt-image-2/edit",
+        "fal-ai/gpt-image-1.5/edit",
+        "xai/grok-imagine-image/edit",
+        "xai/grok-imagine-image/quality/edit",
+        "fal-ai/qwen-image-edit-2511-multiple-angles"
+      ],
+      "note": "Nano Banana edits are intentionally routed through the Gemini workflow, not here."
+    },
+    "upscale_local": {
+      "file": "upscale_local.json",
+      "purpose": "Free local GPU upscale (ESRGAN 4x) with optional resize to a target megapixel count. No API cost. DEFAULT upscaler.",
+      "auth": "local",
+      "needs_image": true,
+      "engine_node": "ImageUpscaleWithModel + ImageScaleToTotalPixels",
+      "requires_model_file": "upscale_models/4x-UltraSharp.pth",
+      "note": "ESRGAN multiplier is fixed by the .pth (4x-UltraSharp is always 4x). The ImageScaleToTotalPixels node after it lets you dial the final size by megapixels (default 8MP ~ 3760x2116 for 16:9). Mute it (Ctrl+M) to keep the raw 4x output. Swap the model_name widget for different ESRGAN styles."
+    },
+    "upscale_local_to_target": {
+      "file": "upscale_local_to_target.json",
+      "purpose": "Free local GPU upscale (ESRGAN 4x) then resize to an EXACT pixel width x height. For when you need a specific print/presentation size.",
+      "auth": "local",
+      "needs_image": true,
+      "engine_node": "ImageUpscaleWithModel + ImageResizeKJv2",
+      "requires_model_file": "upscale_models/4x-UltraSharp.pth",
+      "note": "Default target 3840x2160 (4K UHD). Change width/height widgets on the ImageResizeKJv2 node. keep_proportion='resize' preserves aspect ratio; use 'stretch' to force exact dims, or 'pad' to letterbox."
+    },
+    "upscale_clarity": {
+      "file": "upscale_clarity.json",
+      "purpose": "Paid Fal Clarity upscaler (adds invented detail). Tuned defaults for cleaner output.",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "Upscaler_fal",
+      "swappable": false,
+      "note": "The POSITIVE prompt is hardcoded inside the fal-api node ('masterpiece, best quality, highres') and cannot be changed from the workflow - only the negative prompt is exposed. Resolution is set via upscale_factor (1.0-4.0), NOT width/height. Defaults tuned 2026-07: creativity=0.20 (was 0.35) and resemblance=0.75 (was 0.6) for less hallucinated detail / cleaner architectural output. Raise creativity toward 0.5 if you want more invented texture."
+    },
+    "upscale_topaz": {
+      "file": "upscale_topaz.json",
+      "purpose": "Paid Fal Topaz image upscaler (highest-end).",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "FalGenericAPI",
+      "swappable": false
+    },
+    "video_text_to_video": {
+      "file": "video_text_to_video.json",
+      "purpose": "Text-to-video via Seedance 2.0 (Fal). Output is a video URL saved to a .txt file in output/.",
+      "auth": "fal",
+      "needs_image": false,
+      "engine_node": "SeedanceTextToVideo_fal",
+      "note": "Output is a URL, not a playable video in ComfyUI. Open the .txt in output/ and paste the URL into a browser, OR use video_preview_from_url to load the frames back into ComfyUI."
+    },
+    "video_image_to_video": {
+      "file": "video_image_to_video.json",
+      "purpose": "Image+text -> video via Seedance 2.0 (Fal). Feed a still image plus a motion/camera prompt. Output is a video URL.",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "SeedanceImageToVideo_fal",
+      "note": "Best all-round image-to-video. Duration 5s or 10s at 480p/720p. Prompt tips: describe camera motion ('camera slowly dollies forward'), atmospheric motion ('subtle wind through foliage'), or explicit action."
+    },
+    "video_veo3_text": {
+      "file": "video_veo3_text.json",
+      "purpose": "Text-to-video via Google Veo3 (Fal). Highest-quality current option, includes native audio generation.",
+      "auth": "fal",
+      "needs_image": false,
+      "engine_node": "Veo3_fal",
+      "note": "8-second fixed duration, audio generation on by default. Most expensive video option."
+    },
+    "video_kling_image": {
+      "file": "video_kling_image.json",
+      "purpose": "Image+text -> video via Kling Pro 1.6 (Fal). Alternative to Seedance with different motion style.",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "KlingPro16_fal",
+      "note": "Cinematic camera motion, fluid natural movement. Optional tail_image lets you specify an end frame for controlled transitions."
+    },
+    "video_generic_fal": {
+      "file": "video_generic_fal.json",
+      "purpose": "Fal video via a swappable endpoint. Test any Kling / Seedance / Veo / Wan / Hailuo / Happy-Horse endpoint with the same graph.",
+      "auth": "fal",
+      "needs_image": false,
+      "engine_node": "FalGenericAPI",
+      "swappable_field": "endpoint",
+      "swappable_values": [
+        "bytedance/seedance-2.0/text-to-video",
+        "bytedance/seedance-2.0/image-to-video",
+        "bytedance/seedance-2.0/fast/text-to-video",
+        "bytedance/seedance-2.0/fast/image-to-video",
+        "bytedance/seedance-2.0/reference-to-video",
+        "fal-ai/kling-video/v3/pro/image-to-video",
+        "fal-ai/kling-video/v3/pro/text-to-video",
+        "fal-ai/kling-video/v3/standard/text-to-video",
+        "fal-ai/kling-video/v3/standard/image-to-video",
+        "fal-ai/kling-video/o3/pro/text-to-video",
+        "fal-ai/kling-video/o3/pro/video-to-video/edit",
+        "fal-ai/bernini-r/text-to-video",
+        "fal-ai/bernini-r/reference-to-video",
+        "fal-ai/bernini-r/edit-video",
+        "fal-ai/bernini-r/reference-edit-video",
+        "alibaba/happy-horse/image-to-video",
+        "alibaba/happy-horse/video-edit",
+        "fal-ai/depth-anything-video"
+      ],
+      "note": "Model-specific args go in extra_arguments as JSON, e.g. {\"duration\":\"5\",\"resolution\":\"720p\"}. Output URL comes back on the raw_response_or_url slot."
+    },
+    "video_preview_from_url": {
+      "file": "video_preview_from_url.json",
+      "purpose": "Utility: paste any generated video URL and preview its frames in ComfyUI as an image batch.",
+      "auth": "none",
+      "needs_image": false,
+      "engine_node": "LoadVideoURL",
+      "note": "Downloads the video and decodes it into a batch of frames. Use frame_load_cap and select_every_nth to control how many frames you extract."
+    },
+    "3d_image_to_glb_trellis": {
+      "file": "3d_image_to_glb_trellis.json",
+      "purpose": "Image -> 3D model (.glb) via Trellis 2 (Fal). Fast, general-purpose.",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "FalGenericAPI",
+      "note": "Output URL points to a .glb file. Download it and open in Blender / any 3D viewer. Best for simple objects and props."
+    },
+    "3d_image_to_glb_meshy": {
+      "file": "3d_image_to_glb_meshy.json",
+      "purpose": "Image -> 3D model via Meshy v6 (Fal). Higher-quality textured meshes.",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "FalGenericAPI",
+      "note": "Better for detailed / textured models. Higher cost than Trellis."
+    },
+    "3d_image_to_glb_rodin": {
+      "file": "3d_image_to_glb_rodin.json",
+      "purpose": "Image -> 3D model via Hyper3D Rodin v2.5 (Fal). Optimized for characters and organic shapes.",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "FalGenericAPI",
+      "note": "Strong on characters, sculpted forms, organic geometry."
+    },
+    "3d_generic_fal": {
+      "file": "3d_generic_fal.json",
+      "purpose": "Fal 3D via a swappable endpoint. Test any image-to-3D model with the same graph.",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "FalGenericAPI",
+      "swappable_field": "endpoint",
+      "swappable_values": [
+        "fal-ai/trellis-2",
+        "fal-ai/meshy/v6/image-to-3d",
+        "fal-ai/hyper3d/rodin/v2.5",
+        "fal-ai/pixal3d",
+        "fal-ai/hunyuan_world/image-to-world"
+      ],
+      "note": "hunyuan_world is image-to-world/scene, not just a single object. Rest are image-to-object."
+    },
+    "render_then_upscale": {
+      "file": "render_then_upscale.json",
+      "purpose": "Render (Flux Pro Kontext, Fal) then upscale (local, free).",
+      "auth": "fal",
+      "needs_image": true,
+      "engine_node": "FluxProKontext_fal + ImageUpscaleWithModel",
+      "requires_model_file": "upscale_models/4x-UltraSharp.pth"
+    }
+  },
+
+  "local_upscale_models": {
+    "recommended": "4x-UltraSharp.pth",
+    "note": "Place any of these in ComfyUI/models/upscale_models/. All are ~64MB and safe on a 12GB RTX 5070 (ComfyUI auto-tiles to avoid OOM). Change the model_name input in the local upscale workflows to match your filename.",
+    "options": {
+      "4x-UltraSharp.pth": "Best for architectural renders - crisp edges, clean surfaces.",
+      "4x_NMKD-Siax_200k.pth": "Photoreal detail retention.",
+      "4x_foolhardy_Remacri.pth": "Strong general-purpose all-rounder.",
+      "RealESRGAN_x4plus.pth": "Safe, widely-compatible baseline."
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": { "image": "PARAM_IMAGE" },
+    "_meta": { "title": "Load Image to Upscale" }
+  },
+  "2": {
+    "class_type": "UpscaleModelLoader",
+    "inputs": { "model_name": "4x-UltraSharp.pth" },
+    "_meta": { "title": "Load Upscale Model" }
+  },
+  "3": {
+    "class_type": "ImageUpscaleWithModel",
+    "inputs": {
+      "upscale_model": ["2", 0],
+      "image": ["1", 0]
+    },
+    "_meta": { "title": "ESRGAN 4x" }
+  },
+  "4": {
+    "class_type": "ImageScaleToTotalPixels",
+    "inputs": {
+      "image": ["3", 0],
+      "upscale_method": "lanczos",
+      "megapixels": 8.0,
+      "resolution_steps": 64
+    },
+    "_meta": { "title": "Resize to target megapixels" }
+  },
+  "5": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "upscale_local",
+      "images": ["4", 0]
+    },
+    "_meta": { "title": "Save Image" }
+  }
+}

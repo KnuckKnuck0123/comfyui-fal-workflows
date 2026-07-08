@@ -1,0 +1,48 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "PARAM_IMAGE"
+    },
+    "_meta": { "title": "Load Input (screenshot/sketch)" }
+  },
+  "2": {
+    "class_type": "FluxProKontext_fal",
+    "inputs": {
+      "prompt": "PARAM_PROMPT",
+      "image": ["1", 0],
+      "aspect_ratio": "16:9",
+      "max_quality": false,
+      "guidance_scale": 3.5,
+      "num_images": 1,
+      "safety_tolerance": "2",
+      "output_format": "png",
+      "sync_mode": false,
+      "seed": 0
+    },
+    "_meta": { "title": "Flux Pro Kontext (fal) - render" }
+  },
+  "3": {
+    "class_type": "UpscaleModelLoader",
+    "inputs": {
+      "model_name": "4x-UltraSharp.pth"
+    },
+    "_meta": { "title": "Load Upscale Model (local, free)" }
+  },
+  "4": {
+    "class_type": "ImageUpscaleWithModel",
+    "inputs": {
+      "upscale_model": ["3", 0],
+      "image": ["2", 0]
+    },
+    "_meta": { "title": "Upscale Render (local GPU)" }
+  },
+  "5": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "render_then_upscale",
+      "images": ["4", 0]
+    },
+    "_meta": { "title": "Save Image" }
+  }
+}
