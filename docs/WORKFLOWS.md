@@ -32,9 +32,9 @@ Other files:
 5. Click **Run** (or Queue). Outputs land in `ComfyUI/output/` with the `filename_prefix` set on the SaveImage node.
 
 Notes:
-- If a workflow does not appear after adding files, refresh the browser.
+- If a workflow does not appear after adding files, click the refresh icon in the ComfyUI Workflows sidebar, or restart ComfyUI Desktop.
 - Local upscale needs a `.pth` in `ComfyUI/models/upscale_models/` (see below).
-- The UI-format files live in `ComfyUI/user/default/workflows/`. The API-format twins in `ComfyUI/workflows_fal/` are for the CLI runner and are not shown in the UI sidebar.
+- The UI-format files live in `<ComfyUI>/user/default/workflows/` (this repo's `workflows_gui/`). The API-format twins in this repo's `workflows_api/` are for the CLI runner and are not shown in the UI sidebar.
 - The `FalGenericAPI` endpoint dropdown was refreshed against the live fal.ai catalog. If you add newer endpoints, either edit `custom_nodes/fal-api/nodes/generic_node.py` (`FAL_ENDPOINTS` list) and restart ComfyUI, or type the endpoint string directly into the workflow JSON - the frontend accepts any string, not just dropdown entries.
 
 ## Workflow catalog (UI + CLI)

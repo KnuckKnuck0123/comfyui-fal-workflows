@@ -25,6 +25,15 @@ reading it a month later. When we ship a workshop cohort, cut a version
 *Working on this here — cut a version tag when we hit a workshop or a
 meaningful milestone.*
 
+### Changed
+- `README.md`, `WORKSHOP.md`: reframe "ComfyUI is running" step around the
+  **ComfyUI Desktop native window**, not a `127.0.0.1:8188` browser check.
+  Students installing the Desktop app never touch a browser — the app IS
+  the UI. Portable/standalone build noted as fallback.
+- `docs/WORKFLOWS.md`: "refresh the browser" → "refresh the Workflows
+  sidebar or restart ComfyUI Desktop." Also fixed a stale
+  `ComfyUI/workflows_fal/` reference (now `workflows_api/` in this repo).
+
 ### Ideas / TODO
 - Capture a real hero screenshot for `docs/img/hero.png`
 - Dry-run the `workflows_gui/` drag-drop path on a clean ComfyUI install

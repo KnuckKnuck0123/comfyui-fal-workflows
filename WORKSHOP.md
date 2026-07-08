@@ -6,7 +6,7 @@ One page. Print it or keep it open in a second tab.
 
 ## Before you start
 
-- [ ] ComfyUI is running (`http://127.0.0.1:8188` opens the canvas)
+- [ ] ComfyUI is running (the **ComfyUI Desktop** app window is open on the canvas)
 - [ ] You have a Fal.ai account with **at least $5 credit** — [fal.ai/dashboard/billing](https://fal.ai/dashboard/billing)
 - [ ] You have a Fal API key — [fal.ai/dashboard/keys](https://fal.ai/dashboard/keys)
 - [ ] `FAL_KEY` is set in your environment and ComfyUI was restarted after

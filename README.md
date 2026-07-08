@@ -19,8 +19,10 @@ hit **Queue**. No coding required.
 You need three things before the workshop:
 
 1. **ComfyUI installed and running** on your machine. Your instructor will
-   provide the install checklist. Verify by opening `http://127.0.0.1:8188`
-   in your browser and seeing the ComfyUI canvas.
+   provide the install checklist. Launch the **ComfyUI Desktop** app — the
+   canvas opens in a native window; you do not need to open a browser. (If
+   you're on the portable/standalone build, the same UI opens in a browser
+   tab automatically.)
 2. **A Fal.ai API key.** Free to sign up, credit-card required, you get a
    small starter balance. [Instructions below.](#step-1-get-a-falai-api-key)
 3. **These workflows loaded into your ComfyUI.** [Copy them in.](#step-3-load-the-workflows-into-comfyui)
@@ -101,7 +103,7 @@ export GEMINI_API_KEY=paste-your-gemini-key-here    # macOS/Linux
 1. **Download this repo** — click the green **Code** button on GitHub →
    **Download ZIP** — or if you have git:
    ```bash
-   git clone https://github.com/<your-org>/comfyui-fal-workflows.git
+   git clone https://github.com/KnuckKnuck0123/comfyui-fal-workflows.git
    ```
 
 2. **Copy the `workflows_gui/*.json` files** into your ComfyUI's user
@@ -279,7 +281,7 @@ Agent context file: [`docs/AI_AGENT_GUIDE.md`](docs/AI_AGENT_GUIDE.md).
 
 ```
 comfyui-fal-workflows/
-├── workflows_gui/           27 workflow JSONs for the ComfyUI browser UI (drag or copy)
+├── workflows_gui/           27 workflow JSONs for the ComfyUI Desktop UI (drag or copy)
 ├── workflows_api/           27 workflow JSONs for the CLI runner / agents (API format)
 ├── run_fal_workflow.py      CLI runner (optional, power-user)
 ├── fal_models.json          Workflow registry (metadata for the runner)
