@@ -1,0 +1,114 @@
+{
+  "id": "video-generic-fal-ui",
+  "revision": 0,
+  "last_node_id": 5,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [80, 200],
+      "size": [315, 314],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [1] },
+        { "name": "MASK", "type": "MASK", "links": null }
+      ],
+      "properties": { "Node name for S&R": "LoadImage" },
+      "widgets_values": ["example.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "FalGenericAPI",
+      "pos": [460, 200],
+      "size": [440, 340],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        { "name": "image_1", "type": "IMAGE", "link": 1, "shape": 7 },
+        { "name": "image_2", "type": "IMAGE", "link": null, "shape": 7 }
+      ],
+      "outputs": [
+        { "name": "image", "type": "IMAGE", "links": null },
+        { "name": "raw_response_or_url", "type": "STRING", "links": [2, 3] }
+      ],
+      "properties": { "Node name for S&R": "FalGenericAPI" },
+      "title": "Fal video (swap endpoint: Kling / Seedance / Veo / Wan / Hailuo)",
+      "widgets_values": [
+        "bytedance/seedance-2.0/image-to-video",
+        "camera slowly dollies forward, subtle atmospheric motion, cinematic",
+        -1,
+        "fixed",
+        "16:9",
+        "{\"duration\": \"5\", \"resolution\": \"720p\"}"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "SaveStringKJ",
+      "pos": [940, 200],
+      "size": [400, 200],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        { "name": "string", "type": "STRING", "link": 2, "widget": { "name": "string" } }
+      ],
+      "outputs": [
+        { "name": "filename", "type": "STRING", "links": null }
+      ],
+      "properties": { "Node name for S&R": "SaveStringKJ" },
+      "title": "Save Video URL to .txt",
+      "widgets_values": ["", "video_generic", "output", ".txt"]
+    },
+    {
+      "id": 4,
+      "type": "LoadVideoURL",
+      "pos": [940, 460],
+      "size": [400, 340],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        { "name": "url", "type": "STRING", "link": 3, "widget": { "name": "url" } }
+      ],
+      "outputs": [
+        { "name": "frames", "type": "IMAGE", "links": [4] },
+        { "name": "frame_count", "type": "INT", "links": null },
+        { "name": "video_info", "type": "VHS_VIDEOINFO", "links": null }
+      ],
+      "properties": { "Node name for S&R": "LoadVideoURL" },
+      "title": "Decode video for preview (mute this to skip download)",
+      "widgets_values": ["", 0, "Disabled", 512, 512, 30, 0, 4]
+    },
+    {
+      "id": 5,
+      "type": "PreviewImage",
+      "pos": [1380, 200],
+      "size": [560, 600],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 4 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "PreviewImage" },
+      "title": "Video Preview (frames as grid)"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 0, "IMAGE"],
+    [2, 2, 1, 3, 0, "STRING"],
+    [3, 2, 1, 4, 0, "STRING"],
+    [4, 4, 0, 5, 0, "IMAGE"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": { "ds": { "scale": 0.85, "offset": [0, 0] } },
+  "version": 0.4
+}

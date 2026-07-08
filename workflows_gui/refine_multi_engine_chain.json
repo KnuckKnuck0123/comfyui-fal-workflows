@@ -1,0 +1,194 @@
+{
+  "id": "refine-multi-engine-chain-ui",
+  "revision": 0,
+  "last_node_id": 8,
+  "last_link_id": 9,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [80, 200],
+      "size": [315, 314],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [1] },
+        { "name": "MASK", "type": "MASK", "links": null }
+      ],
+      "properties": { "Node name for S&R": "LoadImage" },
+      "widgets_values": ["example.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "FluxProKontext_fal",
+      "pos": [460, 200],
+      "size": [400, 400],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        { "name": "image", "type": "IMAGE", "link": 1 }
+      ],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [2, 3] }
+      ],
+      "properties": { "Node name for S&R": "FluxProKontext_fal" },
+      "title": "Stage 1: initial render (Flux Kontext)",
+      "widgets_values": [
+        "photoreal architectural render, dramatic lighting, dusk",
+        "16:9",
+        false,
+        3.5,
+        1,
+        "2",
+        "jpeg",
+        false,
+        0,
+        "fixed"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [460, 660],
+      "size": [400, 320],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 2 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "PreviewImage" },
+      "title": "Preview: Stage 1"
+    },
+    {
+      "id": 4,
+      "type": "FalGenericAPI",
+      "pos": [920, 200],
+      "size": [420, 400],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        { "name": "image_1", "type": "IMAGE", "link": 3 },
+        { "name": "image_2", "type": "IMAGE", "link": null, "shape": 7 }
+      ],
+      "outputs": [
+        { "name": "image", "type": "IMAGE", "links": [4, 5] },
+        { "name": "raw_response_or_url", "type": "STRING", "links": null }
+      ],
+      "properties": { "Node name for S&R": "FalGenericAPI" },
+      "title": "Stage 2: refine (swap endpoint to try any /edit model)",
+      "widgets_values": [
+        "fal-ai/flux-2/edit",
+        "keep the composition, change the sky to warm sunset with subtle atmospheric haze",
+        -1,
+        "fixed",
+        "auto",
+        "{}"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "PreviewImage",
+      "pos": [920, 660],
+      "size": [400, 320],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 4 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "PreviewImage" },
+      "title": "Preview: Stage 2"
+    },
+    {
+      "id": 6,
+      "type": "NanoBanana API\ud83c\udf4c",
+      "pos": [1400, 200],
+      "size": [400, 200],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        { "name": "image", "type": "IMAGE", "link": 5 }
+      ],
+      "outputs": [
+        { "name": "edited_image", "type": "IMAGE", "links": [6, 7] }
+      ],
+      "properties": { "Node name for S&R": "NanoBanana API\ud83c\udf4c" },
+      "title": "Stage 3: polish (Nano Banana / Gemini key)",
+      "widgets_values": [
+        "add crisp architectural details, sharp material definition, subtle window reflections",
+        "gemini-3.1-flash-image",
+        ""
+      ]
+    },
+    {
+      "id": 7,
+      "type": "SaveImage",
+      "pos": [1860, 200],
+      "size": [400, 450],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 6 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "SaveImage" },
+      "widgets_values": ["refine_multi"]
+    },
+    {
+      "id": 8,
+      "type": "PreviewImage",
+      "pos": [1400, 660],
+      "size": [400, 320],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 7 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "PreviewImage" },
+      "title": "Preview: Stage 3 (final)"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 0, "IMAGE"],
+    [2, 2, 0, 3, 0, "IMAGE"],
+    [3, 2, 0, 4, 0, "IMAGE"],
+    [4, 4, 0, 5, 0, "IMAGE"],
+    [5, 4, 0, 6, 0, "IMAGE"],
+    [6, 6, 0, 7, 0, "IMAGE"],
+    [7, 6, 0, 8, 0, "IMAGE"]
+  ],
+  "groups": [
+    {
+      "title": "Stage 1: Flux Kontext (Fal)",
+      "bounding": [440, 140, 440, 880],
+      "color": "#3f789e",
+      "font_size": 22
+    },
+    {
+      "title": "Stage 2: Any Fal /edit endpoint",
+      "bounding": [900, 140, 460, 880],
+      "color": "#a1309b",
+      "font_size": 22
+    },
+    {
+      "title": "Stage 3: Nano Banana (Gemini)",
+      "bounding": [1380, 140, 900, 880],
+      "color": "#b06634",
+      "font_size": 22
+    }
+  ],
+  "config": {},
+  "extra": { "ds": { "scale": 0.65, "offset": [0, 0] } },
+  "version": 0.4
+}

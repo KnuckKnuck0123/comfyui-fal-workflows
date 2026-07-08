@@ -1,0 +1,77 @@
+{
+  "id": "3d-image-to-glb-meshy-ui",
+  "revision": 0,
+  "last_node_id": 3,
+  "last_link_id": 2,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [80, 200],
+      "size": [315, 314],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [1] },
+        { "name": "MASK", "type": "MASK", "links": null }
+      ],
+      "properties": { "Node name for S&R": "LoadImage" },
+      "widgets_values": ["example.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "FalGenericAPI",
+      "pos": [460, 200],
+      "size": [440, 320],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        { "name": "image_1", "type": "IMAGE", "link": 1 },
+        { "name": "image_2", "type": "IMAGE", "link": null, "shape": 7 }
+      ],
+      "outputs": [
+        { "name": "image", "type": "IMAGE", "links": null },
+        { "name": "raw_response_or_url", "type": "STRING", "links": [2] }
+      ],
+      "properties": { "Node name for S&R": "FalGenericAPI" },
+      "title": "Meshy v6 - Image to 3D (.glb)",
+      "widgets_values": [
+        "fal-ai/meshy/v6/image-to-3d",
+        "",
+        -1,
+        "fixed",
+        "auto",
+        "{}"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "SaveStringKJ",
+      "pos": [940, 200],
+      "size": [400, 200],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        { "name": "string", "type": "STRING", "link": 2, "widget": { "name": "string" } }
+      ],
+      "outputs": [
+        { "name": "filename", "type": "STRING", "links": null }
+      ],
+      "properties": { "Node name for S&R": "SaveStringKJ" },
+      "title": "Save Meshy GLB URL to .txt",
+      "widgets_values": ["", "3d_meshy", "output", ".txt"]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 0, "IMAGE"],
+    [2, 2, 1, 3, 0, "STRING"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": { "ds": { "scale": 0.9, "offset": [0, 0] } },
+  "version": 0.4
+}

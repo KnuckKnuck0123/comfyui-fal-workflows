@@ -43,8 +43,25 @@ from pathlib import Path
 # Paths (resolved relative to this file so the script is location-independent)
 # ---------------------------------------------------------------------------
 SCRIPT_DIR = Path(__file__).resolve().parent
-COMFY_DIR = SCRIPT_DIR / "ComfyUI"
-WORKFLOWS_DIR = COMFY_DIR / "workflows_fal"
+
+# COMFY_DIR is the ComfyUI install root (the folder that contains main.py).
+# Two supported layouts:
+#   1. Script lives at <comfy_root>/run_fal_workflow.py, with ComfyUI/ next to it.
+#      (the legacy layout on the author's machine)
+#   2. Script lives inside this repo. Set COMFY_ROOT env var to your ComfyUI folder,
+#      e.g. $env:COMFY_ROOT = "C:\path\to\ComfyUI".
+_env_root = os.environ.get("COMFY_ROOT")
+if _env_root:
+    COMFY_DIR = Path(_env_root).resolve()
+else:
+    COMFY_DIR = SCRIPT_DIR / "ComfyUI"
+
+# Workflows live in the repo (workflows_api/) — API-format JSONs the runner injects into.
+WORKFLOWS_DIR = SCRIPT_DIR / "workflows_api"
+if not WORKFLOWS_DIR.exists():
+    # Legacy: workflows sat inside ComfyUI/workflows_fal on the author's machine.
+    WORKFLOWS_DIR = COMFY_DIR / "workflows_fal"
+
 INPUT_DIR = COMFY_DIR / "input"
 OUTPUT_DIR = COMFY_DIR / "output"
 UPSCALE_MODELS_DIR = COMFY_DIR / "models" / "upscale_models"

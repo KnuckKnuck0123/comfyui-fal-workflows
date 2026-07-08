@@ -1,0 +1,131 @@
+{
+  "id": "upscale-local-ui",
+  "revision": 0,
+  "last_node_id": 6,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [80, 200],
+      "size": [315, 314],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [1] },
+        { "name": "MASK", "type": "MASK", "links": null }
+      ],
+      "properties": { "Node name for S&R": "LoadImage" },
+      "widgets_values": ["example.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "UpscaleModelLoader",
+      "pos": [80, 560],
+      "size": [315, 60],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "UPSCALE_MODEL", "type": "UPSCALE_MODEL", "links": [2] }
+      ],
+      "properties": { "Node name for S&R": "UpscaleModelLoader" },
+      "title": "Model - swap .pth here (4x-UltraSharp, 4x_NMKD-Siax_200k, etc.)",
+      "widgets_values": ["4x-UltraSharp.pth"]
+    },
+    {
+      "id": 3,
+      "type": "ImageUpscaleWithModel",
+      "pos": [460, 260],
+      "size": [280, 80],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        { "name": "upscale_model", "type": "UPSCALE_MODEL", "link": 2 },
+        { "name": "image", "type": "IMAGE", "link": 1 }
+      ],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [3] }
+      ],
+      "properties": { "Node name for S&R": "ImageUpscaleWithModel" },
+      "title": "ESRGAN 4x (fixed multiplier from the model)",
+      "widgets_values": []
+    },
+    {
+      "id": 4,
+      "type": "ImageScaleToTotalPixels",
+      "pos": [800, 260],
+      "size": [360, 120],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        { "name": "image", "type": "IMAGE", "link": 3 }
+      ],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [4, 5] }
+      ],
+      "properties": { "Node name for S&R": "ImageScaleToTotalPixels" },
+      "title": "Resize to target size (MUTE with Ctrl+M to keep raw 4x)",
+      "widgets_values": ["lanczos", 8.0, 64]
+    },
+    {
+      "id": 5,
+      "type": "SaveImage",
+      "pos": [1220, 200],
+      "size": [400, 450],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 4 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "SaveImage" },
+      "widgets_values": ["upscale_local"]
+    },
+    {
+      "id": 6,
+      "type": "PreviewImage",
+      "pos": [1220, 700],
+      "size": [400, 400],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 5 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "PreviewImage" },
+      "widgets_values": []
+    }
+  ],
+  "links": [
+    [1, 1, 0, 3, 1, "IMAGE"],
+    [2, 2, 0, 3, 0, "UPSCALE_MODEL"],
+    [3, 3, 0, 4, 0, "IMAGE"],
+    [4, 4, 0, 5, 0, "IMAGE"],
+    [5, 4, 0, 6, 0, "IMAGE"]
+  ],
+  "groups": [
+    {
+      "title": "Load & upscale 4x",
+      "bounding": [60, 140, 700, 500],
+      "color": "#3f789e",
+      "font_size": 20
+    },
+    {
+      "title": "Resize to exact size (mutable)",
+      "bounding": [780, 140, 400, 280],
+      "color": "#b06634",
+      "font_size": 20
+    }
+  ],
+  "config": {},
+  "extra": { "ds": { "scale": 0.85, "offset": [0, 0] } },
+  "version": 0.4
+}

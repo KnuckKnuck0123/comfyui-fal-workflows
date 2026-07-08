@@ -1,0 +1,182 @@
+{
+  "id": "refine-nanobanana-chain-ui",
+  "revision": 0,
+  "last_node_id": 8,
+  "last_link_id": 9,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [80, 200],
+      "size": [315, 314],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [1] },
+        { "name": "MASK", "type": "MASK", "links": null }
+      ],
+      "properties": { "Node name for S&R": "LoadImage" },
+      "widgets_values": ["example.png", "image"]
+    },
+    {
+      "id": 2,
+      "type": "NanoBanana API\ud83c\udf4c",
+      "pos": [460, 200],
+      "size": [400, 200],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        { "name": "image", "type": "IMAGE", "link": 1 }
+      ],
+      "outputs": [
+        { "name": "edited_image", "type": "IMAGE", "links": [2, 3] }
+      ],
+      "properties": { "Node name for S&R": "NanoBanana API\ud83c\udf4c" },
+      "title": "Stage 1: initial render",
+      "widgets_values": [
+        "turn this into a photoreal architectural render, dramatic lighting",
+        "gemini-3.1-flash-image",
+        ""
+      ]
+    },
+    {
+      "id": 3,
+      "type": "PreviewImage",
+      "pos": [460, 460],
+      "size": [400, 320],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 2 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "PreviewImage" },
+      "title": "Preview: Stage 1"
+    },
+    {
+      "id": 4,
+      "type": "NanoBanana API\ud83c\udf4c",
+      "pos": [920, 200],
+      "size": [400, 200],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        { "name": "image", "type": "IMAGE", "link": 3 }
+      ],
+      "outputs": [
+        { "name": "edited_image", "type": "IMAGE", "links": [4, 5] }
+      ],
+      "properties": { "Node name for S&R": "NanoBanana API\ud83c\udf4c" },
+      "title": "Stage 2: refinement (mute this + downstream to stop here)",
+      "widgets_values": [
+        "keep everything the same but change the sky to a warm sunset and add subtle atmospheric haze",
+        "gemini-3.1-flash-image",
+        ""
+      ]
+    },
+    {
+      "id": 5,
+      "type": "PreviewImage",
+      "pos": [920, 460],
+      "size": [400, 320],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 4 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "PreviewImage" },
+      "title": "Preview: Stage 2"
+    },
+    {
+      "id": 6,
+      "type": "NanoBanana API\ud83c\udf4c",
+      "pos": [1380, 200],
+      "size": [400, 200],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        { "name": "image", "type": "IMAGE", "link": 5 }
+      ],
+      "outputs": [
+        { "name": "edited_image", "type": "IMAGE", "links": [6, 7] }
+      ],
+      "properties": { "Node name for S&R": "NanoBanana API\ud83c\udf4c" },
+      "title": "Stage 3: final polish (mute if not needed)",
+      "widgets_values": [
+        "add crisp architectural details, sharp material definition, subtle window reflections",
+        "gemini-3.1-flash-image",
+        ""
+      ]
+    },
+    {
+      "id": 7,
+      "type": "SaveImage",
+      "pos": [1840, 200],
+      "size": [400, 450],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 6 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "SaveImage" },
+      "widgets_values": ["refine_chain"]
+    },
+    {
+      "id": 8,
+      "type": "PreviewImage",
+      "pos": [1380, 460],
+      "size": [400, 320],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 7 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "PreviewImage" },
+      "title": "Preview: Stage 3 (final)"
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 0, "IMAGE"],
+    [2, 2, 0, 3, 0, "IMAGE"],
+    [3, 2, 0, 4, 0, "IMAGE"],
+    [4, 4, 0, 5, 0, "IMAGE"],
+    [5, 4, 0, 6, 0, "IMAGE"],
+    [6, 6, 0, 7, 0, "IMAGE"],
+    [7, 6, 0, 8, 0, "IMAGE"]
+  ],
+  "groups": [
+    {
+      "title": "Stage 1",
+      "bounding": [440, 140, 440, 680],
+      "color": "#3f789e",
+      "font_size": 24
+    },
+    {
+      "title": "Stage 2",
+      "bounding": [900, 140, 440, 680],
+      "color": "#a1309b",
+      "font_size": 24
+    },
+    {
+      "title": "Stage 3 (final)",
+      "bounding": [1360, 140, 900, 680],
+      "color": "#b06634",
+      "font_size": 24
+    }
+  ],
+  "config": {},
+  "extra": { "ds": { "scale": 0.7, "offset": [0, 0] } },
+  "version": 0.4
+}
