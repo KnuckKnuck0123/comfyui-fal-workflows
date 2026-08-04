@@ -190,19 +190,18 @@ shown, edit the prompt, and press **Queue Prompt**. Image, video, and 3D
 workflows may upload inputs to Fal; `upscale_local` stays on your machine.
 
 ### Content Engine
-- `content_engine_image_studio` ? one hosted-first canvas for Generate, Edit / Render, Variations, and Upscale. Lazy routing executes only the selected paid branch; Generate is the default mode.
+- `content_engine_image_studio` — one hosted-first canvas for Generate, Edit / Render, Variations, and Upscale. Lazy routing executes only the selected paid branch; Generate is the default mode.
 
 ### Concept / abstract (text → image)
 - `abstract_generic_fal` — Flux Dev and other swappable text-to-image endpoints. **← start here**
 - `abstract_krea` — Krea 2 / FLUX.1 Krea, aesthetic-focused
-- `abstract_generic_fal` — swap any Fal text-to-image endpoint
 - `abstract_multigen` — one prompt → N variations, Midjourney-style
 - `abstract_i2i` — image-to-image restyle
 
 ### Nano Banana (Google Gemini)
-- `nanobanana_2_generate` ? Nano Banana 2 text-to-image, 2K default
-- `nanobanana_pro_generate` ? Nano Banana Pro text-to-image, 4K default
-
+- `nanobanana_2_generate` — Nano Banana 2 text-to-image, 2K default
+- `nanobanana_pro_generate` — Nano Banana Pro text-to-image, 4K default
+- `nanobanana_edit_inpaint` — official Nano Banana edit and semantic inpaint workflow
 ### Render (image → photoreal)
 - `render_kontext` — Flux Pro Kontext, best structure preservation. **← start here**
 - `render_nanobanana_gemini` — Google Nano Banana (Gemini key)
