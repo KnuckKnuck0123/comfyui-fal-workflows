@@ -20,7 +20,7 @@ Other files:
 
 1. Start ComfyUI. Make sure `FAL_KEY` and (if using Nano Banana) `GEMINI_API_KEY` are set in the environment *before* ComfyUI launches - the custom nodes read them at startup.
 2. Open the ComfyUI web UI, open the **Workflows** sidebar (left side).
-3. You will see the 32 workflows under `default/workflows/`. Click to load.
+3. You will see the 26 workflows under `default/workflows/`. Click to load.
 4. Every workflow starts with placeholder values you should edit before running:
    - `LoadImage` nodes point to `example.png` - swap for your real input via the widget.
    - The prompt widget in the engine node holds a default architectural prompt - replace it.
@@ -36,6 +36,15 @@ Notes:
 - Local upscale needs a `.pth` in `ComfyUI/models/upscale_models/` (see below).
 - The UI-format files live in `<ComfyUI>/user/default/workflows/` (this repo's `workflows_gui/`). The API-format twins in this repo's `workflows_api/` are for the CLI runner and are not shown in the UI sidebar.
 - The `FalGenericAPI` endpoint dropdown was refreshed against the live fal.ai catalog. If you add newer endpoints, either edit `custom_nodes/fal-api/nodes/generic_node.py` (`FAL_ENDPOINTS` list) and restart ComfyUI, or type the endpoint string directly into the workflow JSON - the frontend accepts any string, not just dropdown entries.
+
+### Fast workflow chooser
+
+- New image from text: `abstract_generic_fal`
+- Sketch/viewport to render: `render_kontext`
+- Gemini edit or semantic inpaint: `nanobanana_edit_inpaint`
+- Text/image/first-last/reference video: `video_studio_fal`
+- Single/multi-view image to 3D: `3d_generic_fal`
+- Free local upscale: `upscale_local`
 
 ## Workflow catalog (UI + CLI)
 

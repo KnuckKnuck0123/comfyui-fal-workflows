@@ -8,7 +8,7 @@ upscaling** — all driven through hosted APIs so you don't need a beefy GPU.
 **Workshop-ready.** Bring your own API key, load a workflow, type a prompt,
 hit **Queue**. No coding required.
 
-![Workflow pack overview — 27 architectural workflows in the ComfyUI sidebar](docs/img/hero.png)
+![Workflow pack overview — 26 architectural workflows in the ComfyUI sidebar](docs/img/hero.png)
 
 *(add a screenshot of your ComfyUI sidebar with the workflows loaded — see `docs/img/README.md`)*
 
@@ -23,8 +23,8 @@ You need three things before the workshop:
    canvas opens in a native window; you do not need to open a browser. (If
    you're on the portable/standalone build, the same UI opens in a browser
    tab automatically.)
-2. **A Fal.ai API key.** Free to sign up, credit-card required, you get a
-   small starter balance. [Instructions below.](#step-1-get-a-falai-api-key)
+2. **A Fal.ai API key and billing setup.** Account, credit, and trial terms can
+   change. [Instructions below.](#step-1-get-a-falai-api-key)
 3. **These workflows loaded into your ComfyUI.** [Copy them in.](#step-3-load-the-workflows-into-comfyui)
 
 Total setup time: ~10 minutes.
@@ -125,12 +125,13 @@ export GEMINI_API_KEY=paste-your-gemini-key-here    # macOS/Linux
    ```
 
 3. **Restart ComfyUI.** Open the **Workflows** panel in the left sidebar —
-   you'll see all 32 workflows.
+   you'll see all 26 workflows.
 
 4. **Install the required custom nodes.** In ComfyUI, open **Manager** →
    **Custom Nodes Manager** → search for and install:
-   - `fal-api` (required for every workflow except `upscale_local*`)
-   - `comfy_nanobanana` (for Nano Banana 2 / Pro generation and editing)
+   - `fal-api` (Fal workflows)
+   - `comfy_nanobanana` (Nano Banana workflows)
+   - `ComfyUI-KJNodes` / `comfyui-kjnodes` (Video Studio, Content Engine, and Save/preview helpers)
 
    Restart ComfyUI one more time after installing.
 
@@ -168,9 +169,25 @@ Try these three, in order, to get a feel for the pack:
 
 ## The full workflow catalog
 
-All 27 workflows, grouped by what they do. See
+All 26 workflows, grouped by what they do. See
 [`docs/WORKFLOWS.md`](docs/WORKFLOWS.md) for parameter tables and full
 per-workflow details.
+
+### Choose a workflow in 10 seconds
+
+| If you want to... | Start with |
+|---|---|
+| Make a new image from words | `abstract_generic_fal` |
+| Turn a sketch or viewport into a render | `render_kontext` |
+| Edit or semantically inpaint an image with Gemini | `nanobanana_edit_inpaint` |
+| Make video from text, an image, two frames, or references | `video_studio_fal` |
+| Make a GLB or world asset from one or two views | `3d_generic_fal` |
+| Upscale without sending the image anywhere | `upscale_local` |
+| Compare multiple image models on one prompt | `abstract_multigen` |
+
+For a first run, load the workflow, replace `example.png` if an image input is
+shown, edit the prompt, and press **Queue Prompt**. Image, video, and 3D
+workflows may upload inputs to Fal; `upscale_local` stays on your machine.
 
 ### Content Engine
 - `content_engine_image_studio` ? one hosted-first canvas for Generate, Edit / Render, Variations, and Upscale. Lazy routing executes only the selected paid branch; Generate is the default mode.
@@ -285,8 +302,8 @@ Agent context file: [`docs/AI_AGENT_GUIDE.md`](docs/AI_AGENT_GUIDE.md).
 
 ```
 comfyui-fal-workflows/
-├── workflows_gui/           32 workflow JSONs for the ComfyUI Desktop UI (drag or copy)
-├── workflows_api/           32 workflow JSONs for the CLI runner / agents (API format)
+├── workflows_gui/           26 workflow JSONs for the ComfyUI Desktop UI (drag or copy)
+├── workflows_api/           26 workflow JSONs for the CLI runner / agents (API format)
 ├── run_fal_workflow.py      CLI runner (optional, power-user)
 ├── fal_models.json          Workflow registry (metadata for the runner)
 ├── docs/

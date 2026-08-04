@@ -2,7 +2,7 @@
 
 Drop workshop screenshots here. The main `README.md` references:
 
-- `hero.png` — ComfyUI with the workflows sidebar open, all 27 loaded.
+- `hero.png` — ComfyUI with the workflows sidebar open, all 26 loaded.
 
 Suggested extras for a good workshop feel:
 - `abstract_generic_fal_result.png` — a nice output from the starter workflow
