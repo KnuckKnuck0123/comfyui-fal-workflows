@@ -1,43 +1,131 @@
 {
-  "id": "3d-generic-fal-ui",
+  "id": "image-to-3d-studio-ui",
   "revision": 0,
-  "last_node_id": 3,
-  "last_link_id": 2,
+  "last_node_id": 4,
+  "last_link_id": 3,
   "nodes": [
     {
       "id": 1,
       "type": "LoadImage",
-      "pos": [80, 200],
-      "size": [315, 314],
+      "pos": [
+        80,
+        180
+      ],
+      "size": [
+        315,
+        314
+      ],
       "flags": {},
       "order": 0,
       "mode": 0,
       "inputs": [],
       "outputs": [
-        { "name": "IMAGE", "type": "IMAGE", "links": [1] },
-        { "name": "MASK", "type": "MASK", "links": null }
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
       ],
-      "properties": { "Node name for S&R": "LoadImage" },
-      "widgets_values": ["example.png", "image"]
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "title": "PRIMARY VIEW - uploads to Fal",
+      "widgets_values": [
+        "example.png",
+        "image"
+      ]
     },
     {
       "id": 2,
-      "type": "FalGenericAPI",
-      "pos": [460, 200],
-      "size": [440, 340],
+      "type": "LoadImage",
+      "pos": [
+        80,
+        590
+      ],
+      "size": [
+        315,
+        314
+      ],
       "flags": {},
       "order": 1,
       "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            2
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "title": "SECOND VIEW - Meshy Multi / Rodin",
+      "widgets_values": [
+        "example.png",
+        "image"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "FalGenericAPI",
+      "pos": [
+        500,
+        260
+      ],
+      "size": [
+        520,
+        390
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
       "inputs": [
-        { "name": "image_1", "type": "IMAGE", "link": 1 },
-        { "name": "image_2", "type": "IMAGE", "link": null, "shape": 7 }
+        {
+          "name": "image_1",
+          "type": "IMAGE",
+          "link": 1,
+          "shape": 7
+        },
+        {
+          "name": "image_2",
+          "type": "IMAGE",
+          "link": 2,
+          "shape": 7
+        }
       ],
       "outputs": [
-        { "name": "image", "type": "IMAGE", "links": null },
-        { "name": "raw_response_or_url", "type": "STRING", "links": [2] }
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "raw_response_or_url",
+          "type": "STRING",
+          "links": [
+            3
+          ]
+        }
       ],
-      "properties": { "Node name for S&R": "FalGenericAPI" },
-      "title": "Fal 3D (swap endpoint: Trellis / Meshy / Rodin / Pixal3d / Hunyuan World)",
+      "properties": {
+        "Node name for S&R": "FalGenericAPI"
+      },
+      "title": "IMAGE TO 3D - SELECT MODEL",
       "widgets_values": [
         "fal-ai/trellis-2",
         "",
@@ -48,30 +136,126 @@
       ]
     },
     {
-      "id": 3,
+      "id": 4,
       "type": "SaveStringKJ",
-      "pos": [940, 200],
-      "size": [400, 200],
+      "pos": [
+        1100,
+        330
+      ],
+      "size": [
+        420,
+        220
+      ],
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
-        { "name": "string", "type": "STRING", "link": 2, "widget": { "name": "string" } }
+        {
+          "name": "string",
+          "type": "STRING",
+          "link": 3,
+          "widget": {
+            "name": "string"
+          }
+        }
       ],
       "outputs": [
-        { "name": "filename", "type": "STRING", "links": null }
+        {
+          "name": "filename",
+          "type": "STRING",
+          "links": null
+        }
       ],
-      "properties": { "Node name for S&R": "SaveStringKJ" },
-      "title": "Save 3D URL to .txt",
-      "widgets_values": ["", "3d_generic", "output", ".txt"]
+      "properties": {
+        "Node name for S&R": "SaveStringKJ"
+      },
+      "title": "SAVE GLB / ASSET URL",
+      "widgets_values": [
+        "",
+        "image_to_3d",
+        "output",
+        ".txt"
+      ]
     }
   ],
   "links": [
-    [1, 1, 0, 2, 0, "IMAGE"],
-    [2, 2, 1, 3, 0, "STRING"]
+    [
+      1,
+      1,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      2,
+      0,
+      3,
+      1,
+      "IMAGE"
+    ],
+    [
+      3,
+      3,
+      1,
+      4,
+      0,
+      "STRING"
+    ]
   ],
-  "groups": [],
+  "groups": [
+    {
+      "id": 1,
+      "title": "SOURCE VIEWS",
+      "bounding": [
+        40,
+        100,
+        400,
+        850
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "MODEL + OUTPUT",
+      "bounding": [
+        460,
+        180,
+        1110,
+        550
+      ],
+      "color": "#4f7f63",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
   "config": {},
-  "extra": { "ds": { "scale": 0.9, "offset": [0, 0] } },
+  "extra": {
+    "image_to_3d": {
+      "models": [
+        "fal-ai/trellis-2",
+        "fal-ai/meshy/v6/image-to-3d",
+        "fal-ai/meshy/v6/multi-image-to-3d",
+        "fal-ai/hyper3d/rodin/v2.5",
+        "fal-ai/pixal3d",
+        "fal-ai/hunyuan_world/image-to-world"
+      ],
+      "multi_view_models": [
+        "fal-ai/meshy/v6/multi-image-to-3d",
+        "fal-ai/hyper3d/rodin/v2.5"
+      ],
+      "security_notice": "Input images are uploaded to Fal. Do not use confidential project imagery unless transfer is permitted."
+    },
+    "ds": {
+      "scale": 0.85,
+      "offset": [
+        20,
+        20
+      ]
+    }
+  },
   "version": 0.4
 }

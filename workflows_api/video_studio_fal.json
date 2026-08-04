@@ -1,0 +1,198 @@
+{
+  "1": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "bytedance/seedance-2.0/text-to-video",
+      "prompt": "PARAM_PROMPT",
+      "seed": -1,
+      "aspect_ratio": "16:9",
+      "extra_arguments": "{\"resolution\":\"720p\",\"duration\":\"5\",\"generate_audio\":true}"
+    },
+    "_meta": {
+      "title": "1 - Text to video"
+    }
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "PARAM_IMAGE"
+    },
+    "_meta": {
+      "title": "Start / primary reference image"
+    }
+  },
+  "3": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "bytedance/seedance-2.0/image-to-video",
+      "prompt": "PARAM_PROMPT",
+      "seed": -1,
+      "aspect_ratio": "16:9",
+      "extra_arguments": "{\"resolution\":\"720p\",\"duration\":\"5\",\"generate_audio\":true}",
+      "image_1": [
+        "2",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "2 - Image to video"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "PARAM_IMAGE_2"
+    },
+    "_meta": {
+      "title": "End frame"
+    }
+  },
+  "5": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "bytedance/seedance-2.0/image-to-video",
+      "prompt": "PARAM_PROMPT",
+      "seed": -1,
+      "aspect_ratio": "16:9",
+      "extra_arguments": "{\"resolution\":\"720p\",\"duration\":\"5\",\"generate_audio\":true}",
+      "image_1": [
+        "2",
+        0
+      ],
+      "image_2": [
+        "4",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "3 - First / last frame"
+    }
+  },
+  "6": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "PARAM_IMAGE_2"
+    },
+    "_meta": {
+      "title": "Second reference image"
+    }
+  },
+  "7": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "bytedance/seedance-2.0/reference-to-video",
+      "prompt": "PARAM_PROMPT",
+      "seed": -1,
+      "aspect_ratio": "16:9",
+      "extra_arguments": "{\"resolution\":\"720p\",\"duration\":\"5\",\"generate_audio\":true}",
+      "image_1": [
+        "2",
+        0
+      ],
+      "image_2": [
+        "6",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "4 - Reference to video; prompt with @Image1 and @Image2"
+    }
+  },
+  "8": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": false,
+      "on_false": [
+        "1",
+        1
+      ],
+      "on_true": [
+        "3",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Image-to-video mode"
+    }
+  },
+  "9": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": false,
+      "on_false": [
+        "8",
+        0
+      ],
+      "on_true": [
+        "5",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "First / last-frame mode"
+    }
+  },
+  "10": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": false,
+      "on_false": [
+        "9",
+        0
+      ],
+      "on_true": [
+        "7",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Reference-to-video mode"
+    }
+  },
+  "11": {
+    "class_type": "SaveStringKJ",
+    "inputs": {
+      "string": [
+        "10",
+        0
+      ],
+      "filename_prefix": "video_studio",
+      "output_folder": "output",
+      "file_extension": ".txt"
+    },
+    "_meta": {
+      "title": "Save selected video URL"
+    }
+  },
+  "12": {
+    "class_type": "LoadVideoURL",
+    "inputs": {
+      "url": [
+        "10",
+        0
+      ],
+      "force_rate": 0,
+      "force_size": "Disabled",
+      "custom_width": 512,
+      "custom_height": 512,
+      "frame_load_cap": 30,
+      "skip_first_frames": 0,
+      "select_every_nth": 4
+    },
+    "_meta": {
+      "title": "Decode selected video for preview"
+    }
+  },
+  "13": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "12",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Video preview"
+    }
+  }
+}

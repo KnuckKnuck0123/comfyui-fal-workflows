@@ -1,68 +1,24 @@
 {
-  "id": "refine-from-output-ui",
+  "id": "nanobanana-2-generate-ui",
   "revision": 0,
-  "last_node_id": 4,
+  "last_node_id": 3,
   "last_link_id": 3,
   "nodes": [
     {
       "id": 1,
-      "type": "LoadImageOutput",
+      "type": "NanoBananaGeminiImageNode",
       "pos": [
-        80,
-        200
+        100,
+        220
       ],
       "size": [
-        315,
-        314
+        420,
+        430
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
       "inputs": [],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            1
-          ]
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": null
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoadImageOutput"
-      },
-      "title": "Pick a prior output to refine",
-      "widgets_values": [
-        "example.png",
-        "image"
-      ]
-    },
-    {
-      "id": 2,
-      "type": "NanoBananaGeminiImageNode",
-      "pos": [
-        460,
-        200
-      ],
-      "size": [
-        400,
-        200
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 1
-        }
-      ],
       "outputs": [
         {
           "name": "images",
@@ -80,33 +36,32 @@
       ],
       "properties": {
         "Node name for S&R": "NanoBananaGeminiImageNode",
-        "title": "Nano Banana 2 - Edit"
+        "title": "Nano Banana 2 - Generate"
       },
-      "title": "Refine (change prompt each run)",
       "widgets_values": [
-        "make the sky overcast and add subtle rain",
+        "Create a high-quality architectural concept image.",
         "Nano Banana 2",
         1,
         42,
         "",
         "",
         "auto",
-        "auto"
+        "2K"
       ]
     },
     {
-      "id": 3,
+      "id": 2,
       "type": "SaveImage",
       "pos": [
-        920,
-        200
+        580,
+        180
       ],
       "size": [
         400,
         450
       ],
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "inputs": [
         {
@@ -117,25 +72,26 @@
       ],
       "outputs": [],
       "properties": {
-        "Node name for S&R": "SaveImage"
+        "Node name for S&R": "SaveImage",
+        "title": "Save image"
       },
       "widgets_values": [
-        "refine_iter"
+        "nanobanana_2_generate"
       ]
     },
     {
-      "id": 4,
+      "id": 3,
       "type": "PreviewImage",
       "pos": [
-        920,
-        700
+        580,
+        690
       ],
       "size": [
         400,
         400
       ],
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
@@ -146,14 +102,15 @@
       ],
       "outputs": [],
       "properties": {
-        "Node name for S&R": "PreviewImage"
+        "Node name for S&R": "PreviewImage",
+        "title": "Preview image"
       },
       "widgets_values": []
     }
   ],
   "links": [
     [
-      1,
+      2,
       1,
       0,
       2,
@@ -161,18 +118,10 @@
       "IMAGE"
     ],
     [
-      2,
-      2,
+      3,
+      1,
       0,
       3,
-      0,
-      "IMAGE"
-    ],
-    [
-      3,
-      2,
-      0,
-      4,
       0,
       "IMAGE"
     ]

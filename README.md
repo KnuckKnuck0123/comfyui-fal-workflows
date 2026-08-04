@@ -8,7 +8,7 @@ upscaling** — all driven through hosted APIs so you don't need a beefy GPU.
 **Workshop-ready.** Bring your own API key, load a workflow, type a prompt,
 hit **Queue**. No coding required.
 
-![Workflow pack overview — 27 architectural workflows in the ComfyUI sidebar](docs/img/hero.png)
+![Workflow pack overview — 26 architectural workflows in the ComfyUI sidebar](docs/img/hero.png)
 
 *(add a screenshot of your ComfyUI sidebar with the workflows loaded — see `docs/img/README.md`)*
 
@@ -23,8 +23,8 @@ You need three things before the workshop:
    canvas opens in a native window; you do not need to open a browser. (If
    you're on the portable/standalone build, the same UI opens in a browser
    tab automatically.)
-2. **A Fal.ai API key.** Free to sign up, credit-card required, you get a
-   small starter balance. [Instructions below.](#step-1-get-a-falai-api-key)
+2. **A Fal.ai API key and billing setup.** Account, credit, and trial terms can
+   change. [Instructions below.](#step-1-get-a-falai-api-key)
 3. **These workflows loaded into your ComfyUI.** [Copy them in.](#step-3-load-the-workflows-into-comfyui)
 
 Total setup time: ~10 minutes.
@@ -125,12 +125,13 @@ export GEMINI_API_KEY=paste-your-gemini-key-here    # macOS/Linux
    ```
 
 3. **Restart ComfyUI.** Open the **Workflows** panel in the left sidebar —
-   you'll see all 27 workflows.
+   you'll see all 26 workflows.
 
 4. **Install the required custom nodes.** In ComfyUI, open **Manager** →
    **Custom Nodes Manager** → search for and install:
-   - `fal-api` (required for every workflow except `upscale_local*`)
-   - `nanobananaapi` (only if you got a Gemini key)
+   - `fal-api` (Fal workflows)
+   - `comfy_nanobanana` (Nano Banana workflows)
+   - `ComfyUI-KJNodes` / `comfyui-kjnodes` (Video Studio, Content Engine, and Save/preview helpers)
 
    Restart ComfyUI one more time after installing.
 
@@ -140,9 +141,9 @@ export GEMINI_API_KEY=paste-your-gemini-key-here    # macOS/Linux
 
 Try these three, in order, to get a feel for the pack:
 
-### 1. `abstract_flux` — text to image (cheapest, no image needed)
+### 1. `abstract_generic_fal` — text to image (swappable endpoint, no image needed)
 
-1. Click `abstract_flux` in the Workflows sidebar.
+1. Click `abstract_generic_fal` in the Workflows sidebar.
 2. In the **Flux Dev (fal)** node, edit the `prompt` field. Example:
    > `brutalist library atrium at dusk, warm rim light, architectural photography, editorial magazine style`
 3. Click **Queue**. First run: ~10–20 seconds. Result lands in the Save Image node preview and in `ComfyUI/output/`.
@@ -168,16 +169,39 @@ Try these three, in order, to get a feel for the pack:
 
 ## The full workflow catalog
 
-All 27 workflows, grouped by what they do. See
+All 26 workflows, grouped by what they do. See
 [`docs/WORKFLOWS.md`](docs/WORKFLOWS.md) for parameter tables and full
 per-workflow details.
 
+### Choose a workflow in 10 seconds
+
+| If you want to... | Start with |
+|---|---|
+| Make a new image from words | `abstract_generic_fal` |
+| Turn a sketch or viewport into a render | `render_kontext` |
+| Edit or semantically inpaint an image with Gemini | `nanobanana_edit_inpaint` |
+| Make video from text, an image, two frames, or references | `video_studio_fal` |
+| Make a GLB or world asset from one or two views | `3d_generic_fal` |
+| Upscale without sending the image anywhere | `upscale_local` |
+| Compare multiple image models on one prompt | `abstract_multigen` |
+
+For a first run, load the workflow, replace `example.png` if an image input is
+shown, edit the prompt, and press **Queue Prompt**. Image, video, and 3D
+workflows may upload inputs to Fal; `upscale_local` stays on your machine.
+
+### Content Engine
+- `content_engine_image_studio` ? one hosted-first canvas for Generate, Edit / Render, Variations, and Upscale. Lazy routing executes only the selected paid branch; Generate is the default mode.
+
 ### Concept / abstract (text → image)
-- `abstract_flux` — Flux Dev, balanced quality/cost. **← start here**
+- `abstract_generic_fal` — Flux Dev and other swappable text-to-image endpoints. **← start here**
 - `abstract_krea` — Krea 2 / FLUX.1 Krea, aesthetic-focused
 - `abstract_generic_fal` — swap any Fal text-to-image endpoint
 - `abstract_multigen` — one prompt → N variations, Midjourney-style
 - `abstract_i2i` — image-to-image restyle
+
+### Nano Banana (Google Gemini)
+- `nanobanana_2_generate` ? Nano Banana 2 text-to-image, 2K default
+- `nanobanana_pro_generate` ? Nano Banana Pro text-to-image, 4K default
 
 ### Render (image → photoreal)
 - `render_kontext` — Flux Pro Kontext, best structure preservation. **← start here**
@@ -198,15 +222,12 @@ per-workflow details.
 - `upscale_topaz` — paid Fal Topaz (highest-end)
 
 ### 3D (image → .glb model)
-- `3d_image_to_glb_trellis` — Trellis 2, fast general-purpose
-- `3d_image_to_glb_meshy` — Meshy v6, textured meshes
-- `3d_image_to_glb_rodin` — Hyper3D Rodin, organic shapes
-- `3d_generic_fal` — swap any Fal image-to-3D endpoint
+- `3d_generic_fal` — consolidated single/multi-view studio; swap Trellis 2,
+  Meshy 6, Meshy 6 Multi, Rodin 2.5, Pixal3D, or Hunyuan World
 
 ### Video (text or image → video)
-- `video_text_to_video` — Seedance 2.0 text-to-video
+- `video_studio_fal` — Seedance text, image, first/last-frame, and reference-to-video modes
 - `video_veo3_text` — Google Veo3 (best quality, includes audio)
-- `video_image_to_video` — Seedance image + motion prompt
 - `video_kling_image` — Kling Pro 1.6 image + motion prompt
 - `video_generic_fal` — swap any Fal video endpoint
 - `video_preview_from_url` — utility: preview a hosted video URL
@@ -227,8 +248,8 @@ Add credit at [fal.ai/dashboard/billing](https://fal.ai/dashboard/billing).
 The `fal-api` custom node isn't installed. Open ComfyUI Manager → install
 `fal-api` → restart ComfyUI.
 
-**"Node type 'NanoBanana API🍌' not found"**
-Install `nanobananaapi` via ComfyUI Manager.
+**"Node type 'NanoBananaGeminiImageNode' not found"**
+Install `comfy_nanobanana` via ComfyUI Manager.
 
 **"Local upscale model 'RealESRGAN_x4plus.pth' not found"**
 Download it (see Step 4.3) and place it in `ComfyUI/models/upscale_models/`.
@@ -259,7 +280,7 @@ $env:COMFY_ROOT = "C:\Users\<you>\Documents\ComfyUI"
 python run_fal_workflow.py --list
 
 # Text-to-image
-python run_fal_workflow.py abstract_flux --prompt "brutalist library atrium at dusk"
+python run_fal_workflow.py abstract_generic_fal --prompt "brutalist library atrium at dusk" --endpoint fal-ai/flux/dev
 
 # Sketch to render
 python run_fal_workflow.py render_kontext --image shot.png --prompt "photoreal dusk render"
@@ -281,8 +302,8 @@ Agent context file: [`docs/AI_AGENT_GUIDE.md`](docs/AI_AGENT_GUIDE.md).
 
 ```
 comfyui-fal-workflows/
-├── workflows_gui/           27 workflow JSONs for the ComfyUI Desktop UI (drag or copy)
-├── workflows_api/           27 workflow JSONs for the CLI runner / agents (API format)
+├── workflows_gui/           26 workflow JSONs for the ComfyUI Desktop UI (drag or copy)
+├── workflows_api/           26 workflow JSONs for the CLI runner / agents (API format)
 ├── run_fal_workflow.py      CLI runner (optional, power-user)
 ├── fal_models.json          Workflow registry (metadata for the runner)
 ├── docs/
@@ -303,7 +324,7 @@ are what the runner and agents inject prompts into.
 ## What's NOT in this repo
 
 - **ComfyUI itself** — install from [comfy.org](https://www.comfy.org/) or [GitHub](https://github.com/comfyanonymous/ComfyUI).
-- **The custom nodes** (`fal-api`, `nanobananaapi`) — install via ComfyUI Manager.
+- **The custom nodes** (`fal-api`, `comfy_nanobanana`) ? install via ComfyUI Manager.
 - **Model weights** (`.pth`, `.safetensors`) — bring your own.
 - **Your API keys** — never commit them.
 

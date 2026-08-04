@@ -1,29 +1,56 @@
 {
   "1": {
     "class_type": "LoadImage",
-    "inputs": { "image": "PARAM_IMAGE" },
-    "_meta": { "title": "Load Source Image" }
+    "inputs": {
+      "image": "PARAM_IMAGE"
+    },
+    "_meta": {
+      "title": "Primary image"
+    }
   },
   "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "PARAM_IMAGE_2"
+    },
+    "_meta": {
+      "title": "Optional second view"
+    }
+  },
+  "3": {
     "class_type": "FalGenericAPI",
     "inputs": {
       "endpoint": "fal-ai/trellis-2",
-      "prompt": "",
-      "image_1": ["1", 0],
+      "prompt": "PARAM_PROMPT",
+      "image_1": [
+        "1",
+        0
+      ],
+      "image_2": [
+        "2",
+        0
+      ],
       "seed": -1,
       "aspect_ratio": "auto",
       "extra_arguments": "{}"
     },
-    "_meta": { "title": "Fal 3D - swappable endpoint" }
+    "_meta": {
+      "title": "Image to 3D - swappable Fal model"
+    }
   },
-  "3": {
+  "4": {
     "class_type": "SaveStringKJ",
     "inputs": {
-      "string": ["2", 1],
-      "filename_prefix": "3d_generic",
+      "string": [
+        "3",
+        1
+      ],
+      "filename_prefix": "image_to_3d",
       "output_folder": "output",
       "file_extension": ".txt"
     },
-    "_meta": { "title": "Save 3D URL" }
+    "_meta": {
+      "title": "Save GLB / asset URL"
+    }
   }
 }
