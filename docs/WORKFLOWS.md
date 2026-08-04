@@ -20,7 +20,7 @@ Other files:
 
 1. Start ComfyUI. Make sure `FAL_KEY` and (if using Nano Banana) `GEMINI_API_KEY` are set in the environment *before* ComfyUI launches - the custom nodes read them at startup.
 2. Open the ComfyUI web UI, open the **Workflows** sidebar (left side).
-3. You will see the 9 workflows under `default/workflows/`. Click to load.
+3. You will see the 32 workflows under `default/workflows/`. Click to load.
 4. Every workflow starts with placeholder values you should edit before running:
    - `LoadImage` nodes point to `example.png` - swap for your real input via the widget.
    - The prompt widget in the engine node holds a default architectural prompt - replace it.
@@ -28,7 +28,7 @@ Other files:
      - **Screenshot/sketch/i2i edit:** `openai/gpt-image-2/edit`, `fal-ai/gpt-image-1.5/edit`, `fal-ai/flux-2/edit`, `fal-ai/flux-2-pro/edit`, `fal-ai/flux-2-max/edit`, `fal-ai/flux-pro/kontext`, `fal-ai/flux-pro/kontext/max`, `fal-ai/flux-kontext/dev`, `fal-ai/bytedance/seedream/v4.5/edit`, `fal-ai/bytedance/seedream/v5/lite/edit`, `xai/grok-imagine-image/quality/edit`, `fal-ai/qwen-image-edit-2511-multiple-angles`
      - **Abstract text-to-image:** `fal-ai/z-image/turbo`, `ideogram/v4`, `fal-ai/flux-2`, `fal-ai/flux-2/turbo`, `fal-ai/flux-2-pro`, `fal-ai/flux-pro/v1.1-ultra`, `openai/gpt-image-2`, `xai/grok-imagine-image`
      - **Krea (aesthetic):** `krea/v2/large/text-to-image` (best quality), `krea/v2/medium/text-to-image` (balanced), `krea/v2/medium/turbo/text-to-image` (fast), `fal-ai/krea-2/turbo` (newer)
-     - **Nano Banana `model_name` (Gemini key path, live 2026-07 IDs):** `gemini-3.1-flash-image` (Nano Banana 2, default), `gemini-3.1-flash-lite-image` (Nano Banana 2 Lite, cheaper), `gemini-3-pro-image` (Nano Banana Pro, top-tier), `gemini-2.5-flash-image` (original Nano Banana). The `-preview` suffix from earlier IDs is deprecated; use the plain names above. To list what your key can access: `curl "https://generativelanguage.googleapis.com/v1beta/models?key=$env:GEMINI_API_KEY"`.
+     - **Nano Banana `model` (Gemini key path, live 2026-07 IDs):** `gemini-3.1-flash-image` (Nano Banana 2, default), `gemini-3.1-flash-lite-image` (Nano Banana 2 Lite, cheaper), `gemini-3-pro-image` (Nano Banana Pro, top-tier), `gemini-2.5-flash-image` (original Nano Banana). The `-preview` suffix from earlier IDs is deprecated; use the plain names above. To list what your key can access: `curl "https://generativelanguage.googleapis.com/v1beta/models?key=$env:GEMINI_API_KEY"`.
 5. Click **Run** (or Queue). Outputs land in `ComfyUI/output/` with the `filename_prefix` set on the SaveImage node.
 
 Notes:
@@ -41,6 +41,9 @@ Notes:
 
 | Workflow | Cost | What it does | Default engine |
 |---|---|---|---|
+| `content_engine_image_studio` | Fal | Unified hosted Generate, Edit / Render, Variations, and Upscale workspace with lazy routing. | FalGenericAPI |
+| `nanobanana_2_generate` | Gemini | Nano Banana 2 text-to-image generation. | NanoBananaGeminiImageNode |
+| `nanobanana_pro_generate` | Gemini | Nano Banana Pro text-to-image generation. | NanoBananaGeminiImageNode |
 | `refine_nanobanana_chain` | Gemini | Gemini-style multi-stage refinement (3 chained Nano Banana passes) | NanoBanana x3 |
 | `refine_from_output` | Gemini | pick a prior output + refine prompt (interactive loop) | NanoBanana |
 | `refine_multi_engine_chain` | Fal + Gemini | 3-stage refinement across different engines | Kontext -> any Fal /edit -> Nano Banana |
@@ -48,7 +51,6 @@ Notes:
 | `render_kontext` | Fal | screenshot/sketch -> photoreal render | FluxProKontext_fal |
 | `render_nanobanana_gemini` | Gemini | screenshot/sketch -> render (official Google) | NanoBanana (Gemini key) |
 | `render_generic_fal` | Fal | screenshot/sketch -> render, swappable engine | `openai/gpt-image-2/edit` |
-| `abstract_flux` | Fal | text-to-image abstract | FluxDev_fal |
 | `abstract_generic_fal` | Fal | text-to-image abstract, swappable engine | `fal-ai/z-image/turbo` |
 | `abstract_krea` | Fal | text-to-image via Krea 2 family | `krea/v2/large/text-to-image` |
 | `abstract_multigen` | Fal | Midjourney-style: one prompt -> N variations, model-swappable | `fal-ai/flux-2` |
@@ -133,8 +135,7 @@ These use Fal's video and 3D endpoints. **Output behavior is different from imag
 
 | Workflow | Model | Kind | Notes |
 |---|---|---|---|
-| `video_text_to_video` | Seedance 2.0 | text -> video | 5s or 10s, 480p/720p |
-| `video_image_to_video` | Seedance 2.0 | image+text -> video | Best all-round image-to-video |
+| `video_studio_fal` | Seedance 2.0 | text/image/first-last/reference -> video | Lazy-routed modes |
 | `video_veo3_text` | Google Veo3 | text -> video | Highest quality + native audio, 8s fixed |
 | `video_kling_image` | Kling Pro 1.6 | image+text -> video | Cinematic motion, optional tail-frame control |
 | `video_generic_fal` | any Fal video endpoint | swappable | Test Kling/Seedance/Veo/Wan/Hailuo with one graph |
@@ -157,12 +158,12 @@ To skip the preview (save API cost of extra bandwidth on the video download): Mu
 
 | Workflow | Model | Best for |
 |---|---|---|
-| `3d_image_to_glb_trellis` | Trellis 2 | General-purpose, fast, cheapest |
-| `3d_image_to_glb_meshy` | Meshy v6 | Higher-quality textured meshes |
-| `3d_image_to_glb_rodin` | Hyper3D Rodin v2.5 | Characters, organic shapes |
-| `3d_generic_fal` | swappable | Test Trellis/Meshy/Rodin/Pixal3d/Hunyuan world |
+| `3d_generic_fal` | swappable | Trellis/Meshy/Meshy Multi/Rodin/Pixal3D/Hunyuan World |
 
-Same URL-based output pattern — the workflow saves a `.txt` with the `.glb` file URL. Download the `.glb` and open in Blender, three.js, PyRevit's 3D viewer, etc. Hunyuan World returns a full **scene** rather than a single object.
+The first image is used by every model. The second image is used by Meshy Multi
+and Rodin as another view of the same object. The workflow saves the primary
+GLB or world-asset URL to `.txt`. Hunyuan World returns a full **scene** rather
+than a conventional object mesh.
 
 ### Cost warning
 
@@ -191,7 +192,7 @@ Four workflows are provided:
 
 Step-by-step:
 
-1. **Do an initial render** using any render workflow (e.g. `render_kontext`, `render_generic_fal`, `render_nanobanana_gemini`, or `abstract_flux`). This puts an image in `ComfyUI/output/`.
+1. **Do an initial render** using any render workflow (e.g. `render_kontext`, `render_generic_fal`, `render_nanobanana_gemini`, or `abstract_generic_fal`). This puts an image in `ComfyUI/output/`.
 2. **Open the `refine_from_output` workflow** from the Workflows sidebar.
 3. **Click the `LoadImageOutput` node's image widget** (the top-left node, labeled "Pick a prior output to refine"). A dropdown appears listing every image in `output/`. Pick the one you just generated.
 4. **Type a targeted refinement prompt** in the Nano Banana node's prompt widget. Good prompts are scoped:
@@ -354,7 +355,7 @@ run_fal_workflow.py render_generic_fal --image cad_shot.png --prompt "..." --end
 ### Abstract text-to-image
 
 ```powershell
-run_fal_workflow.py abstract_flux --prompt "abstract parametric architecture, concrete and light"
+run_fal_workflow.py abstract_generic_fal --prompt "abstract parametric architecture, concrete and light" --endpoint fal-ai/flux/dev
 
 # Swap engines: z-image, ideogram, flux-2, krea, seedream, recraft
 run_fal_workflow.py abstract_generic_fal --prompt "..." --endpoint ideogram/v4

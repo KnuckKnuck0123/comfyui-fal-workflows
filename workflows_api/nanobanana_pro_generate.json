@@ -1,0 +1,31 @@
+{
+  "1": {
+    "class_type": "NanoBananaGeminiImageNode",
+    "inputs": {
+      "prompt": "PARAM_PROMPT",
+      "model": "Nano Banana Pro",
+      "batch_size": 1,
+      "seed": 42,
+      "system_prompt": "",
+      "api_key": "",
+      "aspect_ratio": "auto",
+      "image_size": "4K"
+    },
+    "_meta": {
+      "title": "Nano Banana Pro - Generate"
+    }
+  },
+  "2": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "nanobanana_pro_generate",
+      "images": [
+        "1",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Save image"
+    }
+  }
+}

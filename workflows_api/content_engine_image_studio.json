@@ -1,0 +1,156 @@
+{
+  "1": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "fal-ai/flux-2",
+      "prompt": "PARAM_PROMPT",
+      "seed": -1,
+      "aspect_ratio": "16:9",
+      "extra_arguments": "{\"image_size\":\"landscape_16_9\",\"num_images\":1}"
+    },
+    "_meta": {
+      "title": "1 - Generate"
+    }
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "PARAM_IMAGE"
+    },
+    "_meta": {
+      "title": "Edit source - uploaded to Fal when selected"
+    }
+  },
+  "3": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "openai/gpt-image-2/edit",
+      "prompt": "PARAM_PROMPT",
+      "seed": -1,
+      "aspect_ratio": "16:9",
+      "extra_arguments": "{}",
+      "image_1": [
+        "2",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "2 - Edit / Render"
+    }
+  },
+  "4": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "fal-ai/flux-2",
+      "prompt": "PARAM_PROMPT",
+      "seed": -1,
+      "aspect_ratio": "16:9",
+      "extra_arguments": "{\"image_size\":\"landscape_16_9\",\"num_images\":4}"
+    },
+    "_meta": {
+      "title": "3 - Variations"
+    }
+  },
+  "5": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "PARAM_IMAGE"
+    },
+    "_meta": {
+      "title": "Upscale source - uploaded to Fal when selected"
+    }
+  },
+  "6": {
+    "class_type": "FalGenericAPI",
+    "inputs": {
+      "endpoint": "fal-ai/topaz/upscale/image",
+      "prompt": "",
+      "seed": -1,
+      "aspect_ratio": "16:9",
+      "extra_arguments": "{}",
+      "image_1": [
+        "5",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "4 - Upscale"
+    }
+  },
+  "7": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": false,
+      "on_false": [
+        "1",
+        0
+      ],
+      "on_true": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Edit mode"
+    }
+  },
+  "8": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": false,
+      "on_false": [
+        "7",
+        0
+      ],
+      "on_true": [
+        "4",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Variations mode"
+    }
+  },
+  "9": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": false,
+      "on_false": [
+        "8",
+        0
+      ],
+      "on_true": [
+        "6",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Upscale mode"
+    }
+  },
+  "10": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "content_engine",
+      "images": [
+        "9",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Save selected result"
+    }
+  },
+  "11": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "9",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Preview selected result"
+    }
+  }
+}

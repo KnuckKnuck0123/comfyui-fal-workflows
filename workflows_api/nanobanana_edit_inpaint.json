@@ -5,7 +5,7 @@
       "image": "PARAM_IMAGE"
     },
     "_meta": {
-      "title": "Load Input (screenshot/sketch)"
+      "title": "Load image to edit"
     }
   },
   "2": {
@@ -15,30 +15,30 @@
       "model": "Nano Banana 2",
       "batch_size": 1,
       "seed": 42,
-      "system_prompt": "",
+      "system_prompt": "Perform semantic inpainting. Change only the element or region named in the user prompt. Keep everything else exactly the same, preserving composition, geometry, perspective, materials, lighting, color, and style.",
       "api_key": "",
       "aspect_ratio": "auto",
-      "image_size": "auto",
+      "image_size": "2K",
       "images": [
         "1",
         0
       ]
     },
     "_meta": {
-      "title": "Nano Banana 2 - Edit"
+      "title": "Nano Banana 2 - Inpaint"
     }
   },
   "3": {
     "class_type": "SaveImage",
     "inputs": {
-      "filename_prefix": "render_nanobanana",
+      "filename_prefix": "nanobanana_edit_inpaint",
       "images": [
         "2",
         0
       ]
     },
     "_meta": {
-      "title": "Save Image"
+      "title": "Save image"
     }
   }
 }

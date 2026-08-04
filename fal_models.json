@@ -1,6 +1,5 @@
 {
   "_comment": "Model/engine registry for run_fal_workflow.py. 'workflows' maps a friendly workflow name to its JSON file, the auth it needs, and (for FalGenericAPI-based workflows) the swappable endpoints you can pass with --endpoint. Costs: 'local' = free (your GPU), 'fal' = Fal API credits (FAL_KEY), 'gemini' = Google Gemini credits (GEMINI_API_KEY).",
-
   "workflows": {
     "render_kontext": {
       "file": "render_kontext.json",
@@ -15,13 +14,11 @@
       "purpose": "Screenshot/sketch -> render via official Google Nano Banana (Gemini key).",
       "auth": "gemini",
       "needs_image": true,
-      "engine_node": "NanoBanana API\ud83c\udf4c",
-      "swappable_field": "model_name",
+      "engine_node": "NanoBananaGeminiImageNode",
+      "swappable_field": "model",
       "swappable_values": [
-        "gemini-3.1-flash-image",
-        "gemini-3.1-flash-lite-image",
-        "gemini-3-pro-image",
-        "gemini-2.5-flash-image"
+        "Nano Banana 2",
+        "Nano Banana Pro"
       ],
       "note": "Current Google model IDs (as of 2026-07): gemini-3.1-flash-image = Nano Banana 2 (default), gemini-3.1-flash-lite-image = Nano Banana 2 Lite (cheaper), gemini-3-pro-image = Nano Banana Pro (top-tier), gemini-2.5-flash-image = original Nano Banana. Use the API model listing endpoint to see what your key can access."
     },
@@ -55,14 +52,6 @@
         "fal-ai/qwen-image-edit-2511-multiple-angles"
       ],
       "note": "Nano Banana edits are intentionally routed through the Gemini workflow, not here. Krea/Flux image-to-image entries (flux/krea/*) accept a source image plus a text prompt."
-    },
-    "abstract_flux": {
-      "file": "abstract_flux.json",
-      "purpose": "Text-to-image abstract generation via Flux Dev.",
-      "auth": "fal",
-      "needs_image": false,
-      "engine_node": "FluxDev_fal",
-      "swappable": false
     },
     "abstract_generic_fal": {
       "file": "abstract_generic_fal.json",
@@ -145,7 +134,7 @@
       "purpose": "Iterative refinement chain (Gemini-style semantic inpainting). LoadImage -> NanoBanana#1 -> NanoBanana#2 -> NanoBanana#3 -> SaveImage. Each stage takes the previous stage's output plus a targeted prompt (e.g. 'change sky to sunset').",
       "auth": "gemini",
       "needs_image": true,
-      "engine_node": "NanoBanana API\ud83c\udf4c (x3)",
+      "engine_node": "NanoBananaGeminiImageNode (x3)",
       "note": "Mute (Ctrl+M) any stage nodes you want to skip. Each stage has its own prompt widget. Best for pre-planned multi-step refinement."
     },
     "refine_from_output": {
@@ -153,7 +142,7 @@
       "purpose": "Interactive Gemini-style refinement: pick any prior output from ComfyUI/output/ and refine with a new prompt. Run again after each refinement.",
       "auth": "gemini",
       "needs_image": false,
-      "engine_node": "NanoBanana API\ud83c\udf4c",
+      "engine_node": "NanoBananaGeminiImageNode",
       "note": "Uses LoadImageOutput node - dropdown lists everything in ComfyUI/output/. Change the dropdown to the last render, change the prompt, click Run. Repeat."
     },
     "refine_multi_engine_chain": {
@@ -161,7 +150,7 @@
       "purpose": "Multi-engine 3-stage refinement chain: Flux Kontext -> any Fal /edit endpoint -> Nano Banana (Gemini). Lets you compare how different models handle each refinement step.",
       "auth": "fal+gemini",
       "needs_image": true,
-      "engine_node": "FluxProKontext_fal + FalGenericAPI + NanoBanana API\ud83c\udf4c",
+      "engine_node": "FluxProKontext_fal + FalGenericAPI + NanoBananaGeminiImageNode",
       "note": "Any /edit-capable Fal endpoint works in Stage 2 (fal-ai/flux-2/edit, openai/gpt-image-2/edit, fal-ai/bytedance/seedream/v4.5/edit, fal-ai/flux-pro/kontext/max, fal-ai/gemini-3-pro-image-preview/edit, etc.). Mute stages to skip them."
     },
     "refine_from_output_generic": {
@@ -250,22 +239,6 @@
       "engine_node": "FalGenericAPI",
       "swappable": false
     },
-    "video_text_to_video": {
-      "file": "video_text_to_video.json",
-      "purpose": "Text-to-video via Seedance 2.0 (Fal). Output is a video URL saved to a .txt file in output/.",
-      "auth": "fal",
-      "needs_image": false,
-      "engine_node": "SeedanceTextToVideo_fal",
-      "note": "Output is a URL, not a playable video in ComfyUI. Open the .txt in output/ and paste the URL into a browser, OR use video_preview_from_url to load the frames back into ComfyUI."
-    },
-    "video_image_to_video": {
-      "file": "video_image_to_video.json",
-      "purpose": "Image+text -> video via Seedance 2.0 (Fal). Feed a still image plus a motion/camera prompt. Output is a video URL.",
-      "auth": "fal",
-      "needs_image": true,
-      "engine_node": "SeedanceImageToVideo_fal",
-      "note": "Best all-round image-to-video. Duration 5s or 10s at 480p/720p. Prompt tips: describe camera motion ('camera slowly dollies forward'), atmospheric motion ('subtle wind through foliage'), or explicit action."
-    },
     "video_veo3_text": {
       "file": "video_veo3_text.json",
       "purpose": "Text-to-video via Google Veo3 (Fal). Highest-quality current option, includes native audio generation.",
@@ -319,33 +292,9 @@
       "engine_node": "LoadVideoURL",
       "note": "Downloads the video and decodes it into a batch of frames. Use frame_load_cap and select_every_nth to control how many frames you extract."
     },
-    "3d_image_to_glb_trellis": {
-      "file": "3d_image_to_glb_trellis.json",
-      "purpose": "Image -> 3D model (.glb) via Trellis 2 (Fal). Fast, general-purpose.",
-      "auth": "fal",
-      "needs_image": true,
-      "engine_node": "FalGenericAPI",
-      "note": "Output URL points to a .glb file. Download it and open in Blender / any 3D viewer. Best for simple objects and props."
-    },
-    "3d_image_to_glb_meshy": {
-      "file": "3d_image_to_glb_meshy.json",
-      "purpose": "Image -> 3D model via Meshy v6 (Fal). Higher-quality textured meshes.",
-      "auth": "fal",
-      "needs_image": true,
-      "engine_node": "FalGenericAPI",
-      "note": "Better for detailed / textured models. Higher cost than Trellis."
-    },
-    "3d_image_to_glb_rodin": {
-      "file": "3d_image_to_glb_rodin.json",
-      "purpose": "Image -> 3D model via Hyper3D Rodin v2.5 (Fal). Optimized for characters and organic shapes.",
-      "auth": "fal",
-      "needs_image": true,
-      "engine_node": "FalGenericAPI",
-      "note": "Strong on characters, sculpted forms, organic geometry."
-    },
     "3d_generic_fal": {
       "file": "3d_generic_fal.json",
-      "purpose": "Fal 3D via a swappable endpoint. Test any image-to-3D model with the same graph.",
+      "purpose": "Canonical single- or multi-view image-to-3D workflow with swappable Fal models.",
       "auth": "fal",
       "needs_image": true,
       "engine_node": "FalGenericAPI",
@@ -353,11 +302,12 @@
       "swappable_values": [
         "fal-ai/trellis-2",
         "fal-ai/meshy/v6/image-to-3d",
+        "fal-ai/meshy/v6/multi-image-to-3d",
         "fal-ai/hyper3d/rodin/v2.5",
         "fal-ai/pixal3d",
         "fal-ai/hunyuan_world/image-to-world"
       ],
-      "note": "hunyuan_world is image-to-world/scene, not just a single object. Rest are image-to-object."
+      "note": "Trellis, Meshy single, Pixal3D, and Hunyuan use the primary view. Meshy Multi and Rodin use both views. Hunyuan returns a world asset rather than a conventional object mesh."
     },
     "render_then_upscale": {
       "file": "render_then_upscale.json",
@@ -366,9 +316,72 @@
       "needs_image": true,
       "engine_node": "FluxProKontext_fal + ImageUpscaleWithModel",
       "requires_model_file": "upscale_models/4x-UltraSharp.pth"
+    },
+    "nanobanana_2_generate": {
+      "file": "nanobanana_2_generate.json",
+      "purpose": "Generate an image from text with Nano Banana 2 through the dedicated Google Gemini node.",
+      "auth": "gemini",
+      "needs_image": false,
+      "engine_node": "NanoBananaGeminiImageNode",
+      "model": "Nano Banana 2",
+      "image_size": "2K"
+    },
+    "nanobanana_pro_generate": {
+      "file": "nanobanana_pro_generate.json",
+      "purpose": "Generate an image from text with Nano Banana Pro through the dedicated Google Gemini node.",
+      "auth": "gemini",
+      "needs_image": false,
+      "engine_node": "NanoBananaGeminiImageNode",
+      "model": "Nano Banana Pro",
+      "image_size": "4K"
+    },
+    "content_engine_image_studio": {
+      "file": "content_engine_image_studio.json",
+      "purpose": "Hosted-first Image Studio with safely routed Generate, Edit / Render, Variations, and Upscale modes.",
+      "auth": "fal",
+      "needs_image": false,
+      "engine_node": "FalGenericAPI (x4) + LazySwitchKJ (x3)",
+      "default_mode": "generate",
+      "mode_precedence": [
+        "upscale",
+        "variations",
+        "edit",
+        "generate"
+      ],
+      "note": "Only the selected lazy branch executes. Edit and upscale upload input images to Fal."
+    },
+    "nanobanana_edit_inpaint": {
+      "file": "nanobanana_edit_inpaint.json",
+      "purpose": "Unified image editing and semantic inpainting with a swappable Nano Banana model.",
+      "auth": "gemini",
+      "needs_image": true,
+      "engine_node": "NanoBananaGeminiImageNode",
+      "model": "Nano Banana 2",
+      "image_size": "2K",
+      "edit_mode": "semantic_masking",
+      "note": "The official Gemini node has no mask socket. Name the target region precisely in the prompt; Nano Banana performs conversational semantic masking.",
+      "swappable_field": "model",
+      "swappable_values": [
+        "Nano Banana 2",
+        "Nano Banana Pro"
+      ]
+    },
+    "video_studio_fal": {
+      "file": "video_studio_fal.json",
+      "purpose": "Fal Video Studio with lazy-routed text, image, first/last-frame, and reference-to-video modes.",
+      "auth": "fal",
+      "needs_image": false,
+      "engine_node": "FalGenericAPI (x4) + LazySwitchKJ (x3)",
+      "default_mode": "text_to_video",
+      "mode_precedence": [
+        "reference_to_video",
+        "first_last_frame",
+        "image_to_video",
+        "text_to_video"
+      ],
+      "note": "Only the selected paid branch executes. Image modes upload source images to Fal."
     }
   },
-
   "local_upscale_models": {
     "recommended": "4x-UltraSharp.pth",
     "note": "Place any of these in ComfyUI/models/upscale_models/. All are ~64MB and safe on a 12GB RTX 5070 (ComfyUI auto-tiles to avoid OOM). Change the model_name input in the local upscale workflows to match your filename.",

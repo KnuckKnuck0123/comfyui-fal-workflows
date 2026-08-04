@@ -1,14 +1,5 @@
 {
   "1": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "PARAM_IMAGE"
-    },
-    "_meta": {
-      "title": "Load Input (screenshot/sketch)"
-    }
-  },
-  "2": {
     "class_type": "NanoBananaGeminiImageNode",
     "inputs": {
       "prompt": "PARAM_PROMPT",
@@ -18,27 +9,23 @@
       "system_prompt": "",
       "api_key": "",
       "aspect_ratio": "auto",
-      "image_size": "auto",
+      "image_size": "2K"
+    },
+    "_meta": {
+      "title": "Nano Banana 2 - Generate"
+    }
+  },
+  "2": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "nanobanana_2_generate",
       "images": [
         "1",
         0
       ]
     },
     "_meta": {
-      "title": "Nano Banana 2 - Edit"
-    }
-  },
-  "3": {
-    "class_type": "SaveImage",
-    "inputs": {
-      "filename_prefix": "render_nanobanana",
-      "images": [
-        "2",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "Save Image"
+      "title": "Save image"
     }
   }
 }

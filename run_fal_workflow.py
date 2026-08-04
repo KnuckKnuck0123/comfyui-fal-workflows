@@ -292,11 +292,14 @@ def inject_params(wf, args, meta):
         if args.endpoint and cls == "FalGenericAPI" and "endpoint" in inputs:
             inputs["endpoint"] = args.endpoint
         if args.model:
-            # For FalGenericAPI --model is an alias for endpoint; for Nano Banana it sets model_name; for local upscale it sets the .pth.
+            # For FalGenericAPI --model is an endpoint alias; Nano Banana uses model;
+            # legacy Gemini nodes and local upscalers use model_name.
             if cls == "FalGenericAPI" and "endpoint" in inputs:
                 inputs["endpoint"] = args.model
             if "model_name" in inputs:
                 inputs["model_name"] = args.model
+            if cls == "NanoBananaGeminiImageNode" and "model" in inputs:
+                inputs["model"] = args.model
         if args.extra and cls == "FalGenericAPI" and "extra_arguments" in inputs:
             # Validate it is JSON before sending.
             try:

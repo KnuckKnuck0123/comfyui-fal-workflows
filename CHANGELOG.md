@@ -25,7 +25,14 @@ reading it a month later. When we ship a workshop cohort, cut a version
 *Working on this here — cut a version tag when we hit a workshop or a
 meaningful milestone.*
 
+### Added
+- `content_engine_image_studio`: hosted-first workspace combining Generate, Edit / Render, Variations, and Upscale with lazy routing so only one paid Fal branch executes per queue operation.
+- ADR-001 documenting the hosted-first workspace architecture, provider trust boundary, and cost-safety routing decision.
+- Four dedicated Nano Banana workflow pairs in GUI and API formats: Nano Banana 2 and Nano Banana Pro, each with generation and editing variants.
+- Contract tests and a deterministic generator for the Nano Banana workflow family.
+
 ### Changed
+- Migrated all Nano Banana and mixed-engine templates from the legacy `NanoBanana API??` node to `NanoBananaGeminiImageNode` from `comfy_nanobanana`.
 - `README.md`, `WORKSHOP.md`: reframe "ComfyUI is running" step around the
   **ComfyUI Desktop native window**, not a `127.0.0.1:8188` browser check.
   Students installing the Desktop app never touch a browser — the app IS

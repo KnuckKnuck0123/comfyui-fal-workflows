@@ -1,15 +1,15 @@
 {
-  "id": "refine-from-output-ui",
+  "id": "nanobanana-edit-inpaint-ui",
   "revision": 0,
   "last_node_id": 4,
   "last_link_id": 3,
   "nodes": [
     {
       "id": 1,
-      "type": "LoadImageOutput",
+      "type": "LoadImage",
       "pos": [
         80,
-        200
+        240
       ],
       "size": [
         315,
@@ -34,9 +34,9 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "LoadImageOutput"
+        "Node name for S&R": "LoadImage",
+        "title": "Load image to edit"
       },
-      "title": "Pick a prior output to refine",
       "widgets_values": [
         "example.png",
         "image"
@@ -47,11 +47,11 @@
       "type": "NanoBananaGeminiImageNode",
       "pos": [
         460,
-        200
+        220
       ],
       "size": [
-        400,
-        200
+        420,
+        430
       ],
       "flags": {},
       "order": 1,
@@ -80,26 +80,25 @@
       ],
       "properties": {
         "Node name for S&R": "NanoBananaGeminiImageNode",
-        "title": "Nano Banana 2 - Edit"
+        "title": "Nano Banana 2 - Inpaint"
       },
-      "title": "Refine (change prompt each run)",
       "widgets_values": [
-        "make the sky overcast and add subtle rain",
+        "Change only [specific element or region] to [replacement]. Keep everything else exactly the same.",
         "Nano Banana 2",
         1,
         42,
-        "",
+        "Perform semantic inpainting. Change only the element or region named in the user prompt. Keep everything else exactly the same, preserving composition, geometry, perspective, materials, lighting, color, and style.",
         "",
         "auto",
-        "auto"
+        "2K"
       ]
     },
     {
       "id": 3,
       "type": "SaveImage",
       "pos": [
-        920,
-        200
+        940,
+        180
       ],
       "size": [
         400,
@@ -117,18 +116,19 @@
       ],
       "outputs": [],
       "properties": {
-        "Node name for S&R": "SaveImage"
+        "Node name for S&R": "SaveImage",
+        "title": "Save image"
       },
       "widgets_values": [
-        "refine_iter"
+        "nanobanana_edit_inpaint"
       ]
     },
     {
       "id": 4,
       "type": "PreviewImage",
       "pos": [
-        920,
-        700
+        940,
+        690
       ],
       "size": [
         400,
@@ -146,7 +146,8 @@
       ],
       "outputs": [],
       "properties": {
-        "Node name for S&R": "PreviewImage"
+        "Node name for S&R": "PreviewImage",
+        "title": "Preview image"
       },
       "widgets_values": []
     }

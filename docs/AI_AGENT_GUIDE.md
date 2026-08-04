@@ -26,7 +26,7 @@ Only paid API calls leave the machine.
 | `fal_models.json` | Workflow registry: friendly names, auth, swappable engines |
 | `FAL_WORKFLOWS_README.md` | Human-facing README |
 | `ComfyUI\custom_nodes\fal-api\` | Fal custom nodes (all Flux/Recraft/Seedream/Krea class types) |
-| `ComfyUI\custom_nodes\nanobananaapi\` | Nano Banana Gemini-key node (`NanoBanana API🍌`) |
+| `ComfyUI\custom_nodes\comfy_nanobanana\` | Dedicated Nano Banana Gemini node (`NanoBananaGeminiImageNode`) |
 | `ComfyUI\models\upscale_models\` | Local ESRGAN `.pth` files (empty until user drops one in) |
 | `ComfyUI\output\` | Generated images |
 
@@ -44,17 +44,27 @@ inherit them; existing processes do not.
 
 Load `fal_models.json` for the canonical registry. Summary:
 
+### Content Engine
+| Name | Engine | Cost | Notes |
+|---|---|---|---|
+| `content_engine_image_studio` | FalGenericAPI x4 + LazySwitchKJ x3 | Fal | Generate by default; mode precedence is Upscale, Variations, Edit, Generate. Only the selected lazy branch executes. |
+
+### Dedicated Nano Banana (Google Gemini)
+| Name | Engine | Cost | Notes |
+|---|---|---|---|
+| `nanobanana_2_generate` | NanoBananaGeminiImageNode | Gemini | Text-to-image, 2K default |
+| `nanobanana_pro_generate` | NanoBananaGeminiImageNode | Gemini | Text-to-image, 4K default |
+
 ### Rendering (image edit)
 | Name | Engine | Cost | Notes |
 |---|---|---|---|
 | `render_kontext` | FluxProKontext_fal | Fal | Strong structure preservation |
-| `render_nanobanana_gemini` | NanoBanana API🍌 | Gemini | Official Google, uses GEMINI_API_KEY |
+| `render_nanobanana_gemini` | NanoBananaGeminiImageNode | Gemini | Dedicated Google node, uses GEMINI_API_KEY |
 | `render_generic_fal` | FalGenericAPI (`openai/gpt-image-2/edit` default) | Fal | Swap `endpoint` widget to change model |
 
 ### Text-to-image
 | Name | Engine | Cost | Notes |
 |---|---|---|---|
-| `abstract_flux` | FluxDev_fal | Fal | Balanced quality/cost |
 | `abstract_generic_fal` | FalGenericAPI (`fal-ai/z-image/turbo` default) | Fal | Swappable |
 | `abstract_krea` | FalGenericAPI (`krea/v2/large/text-to-image` default) | Fal | Aesthetic-focused, Krea 2 + FLUX.1 Krea variants |
 | `abstract_multigen` | FalGenericAPI (`fal-ai/flux-2` default) | Fal | Midjourney-style: one prompt -> N variations, batched into a single preview grid |
@@ -72,8 +82,7 @@ Load `fal_models.json` for the canonical registry. Summary:
 ### Video (image+text -> video, text -> video)
 | Name | Engine | Cost | Notes |
 |---|---|---|---|
-| `video_text_to_video` | SeedanceTextToVideo_fal | Fal | 5s/10s, 480p/720p |
-| `video_image_to_video` | SeedanceImageToVideo_fal | Fal | Image + motion prompt |
+| `video_studio_fal` | FalGenericAPI + LazySwitchKJ | Fal | Text/image/first-last/reference modes |
 | `video_veo3_text` | Veo3_fal | Fal (high) | 8s + native audio, best quality |
 | `video_kling_image` | KlingPro16_fal | Fal | Cinematic motion, optional tail_image |
 | `video_generic_fal` | FalGenericAPI | Fal | Swappable video endpoint |
@@ -82,16 +91,13 @@ Load `fal_models.json` for the canonical registry. Summary:
 ### 3D (image -> .glb)
 | Name | Engine | Cost | Notes |
 |---|---|---|---|
-| `3d_image_to_glb_trellis` | FalGenericAPI (`fal-ai/trellis-2`) | Fal | Fast, cheapest |
-| `3d_image_to_glb_meshy` | FalGenericAPI (`fal-ai/meshy/v6/image-to-3d`) | Fal | Textured meshes |
-| `3d_image_to_glb_rodin` | FalGenericAPI (`fal-ai/hyper3d/rodin/v2.5`) | Fal | Organic / characters |
-| `3d_generic_fal` | FalGenericAPI | Fal | Swappable endpoint |
+| `3d_generic_fal` | FalGenericAPI | Fal | Canonical swappable single/multi-view workflow |
 
 ### Iterative refinement (Gemini-style semantic inpainting)
 | Name | Engine | Cost | Notes |
 |---|---|---|---|
-| `refine_nanobanana_chain` | 3 x NanoBanana API🍌 | Gemini | 3-stage chain, one click, mute stages to skip |
-| `refine_from_output` | NanoBanana API🍌 | Gemini | Uses `LoadImageOutput` — pick prior output, refine |
+| `refine_nanobanana_chain` | 3 x NanoBananaGeminiImageNode | Gemini | 3-stage chain, one click, mute stages to skip |
+| `refine_from_output` | NanoBananaGeminiImageNode | Gemini | Uses `LoadImageOutput` ? pick prior output, refine |
 | `refine_multi_engine_chain` | Kontext → FalGenericAPI → Nano Banana | Fal + Gemini | Mixed engines across 3 stages |
 | `refine_from_output_generic` | FalGenericAPI | Fal | Interactive refinement via ANY Fal /edit model |
 
@@ -141,12 +147,12 @@ strings and input field names. Full source of truth: query
 - Resolution is controlled by `upscale_factor` (1.0-4.0). No width/height widgets. To get an exact pixel size from Clarity, chain an `ImageResizeKJv2` after.
 - Tuned defaults for architectural output: `creativity=0.20`, `resemblance=0.75`, `guidance_scale=3.5`, `num_inference_steps=20`.
 
-### `NanoBanana API🍌` (custom, `nanobananaapi` package)
-- Class type literal (with the emoji): `NanoBanana API🍌`
-- Inputs (order): `image` (IMAGE), `prompt` (STRING), `model_name` (STRING, default `gemini-3.1-flash-image`), `api_key` (STRING, empty = use `GEMINI_API_KEY` env)
+### `NanoBananaGeminiImageNode` (dedicated, `comfy_nanobanana` package)
+- Class type: `NanoBananaGeminiImageNode`
+- Required inputs: `prompt`, `model`, `batch_size`, `seed`; optional `images`, `system_prompt`, `api_key`, `aspect_ratio`, and `image_size`. Connect `images` for editing; leave it disconnected for generation.
 - Current live Gemini image model IDs (as of 2026-07): `gemini-3.1-flash-image` (Nano Banana 2, recommended default), `gemini-3.1-flash-lite-image` (Nano Banana 2 Lite, cheaper), `gemini-3-pro-image` (Nano Banana Pro, top-tier), `gemini-2.5-flash-image` (original Nano Banana). The old `-preview` suffix is 404. If a model 404s, list live IDs with `GET https://generativelanguage.googleapis.com/v1beta/models?key=<GEMINI_API_KEY>` and filter for `generateContent` support.
-- Output: `edited_image` (IMAGE)
-- Chainable: feed `edited_image` into another Nano Banana node's `image` input.
+- Outputs: `images` (IMAGE) and `text` (STRING)
+- Chainable: feed `images` into another Nano Banana node's `images` input.
 
 ### `FluxProKontext_fal` (custom, `fal-api` package)
 - Inputs (order): `prompt` (STRING), `image` (IMAGE), then optional: `aspect_ratio`, `max_quality`, `guidance_scale`, `num_images`, `safety_tolerance`, `output_format`, `sync_mode`, `seed`
@@ -306,7 +312,7 @@ python run_fal_workflow.py render_generic_fal --image stage1_00001_.png --prompt
 The runner stages any `--image` path (including from `output/`) into `input/`.
 
 **D. Any model** — the chain works with any edit-capable model. Confirmed
-chainable class types: `NanoBanana API🍌`, `FluxProKontext_fal`,
+chainable class types: `NanoBananaGeminiImageNode`, `FluxProKontext_fal`,
 `FluxProKontextMulti_fal`, `FluxPro1Fill_fal`, `QwenImageEdit_fal`,
 `SeedEditV3_fal`, `SeedreamV4Edit_fal`, `NanoBananaEdit_fal`, and `FalGenericAPI`
 with any `/edit` endpoint.

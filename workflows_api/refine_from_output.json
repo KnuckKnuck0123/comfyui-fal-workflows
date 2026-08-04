@@ -4,24 +4,41 @@
     "inputs": {
       "image": "PARAM_IMAGE"
     },
-    "_meta": { "title": "Load Prior Output" }
+    "_meta": {
+      "title": "Load Prior Output"
+    }
   },
   "2": {
-    "class_type": "NanoBanana API\ud83c\udf4c",
+    "class_type": "NanoBananaGeminiImageNode",
     "inputs": {
-      "image": ["1", 0],
       "prompt": "PARAM_PROMPT",
-      "model_name": "gemini-3.1-flash-image",
-      "api_key": ""
+      "model": "Nano Banana 2",
+      "batch_size": 1,
+      "seed": 42,
+      "system_prompt": "",
+      "api_key": "",
+      "aspect_ratio": "auto",
+      "image_size": "auto",
+      "images": [
+        "1",
+        0
+      ]
     },
-    "_meta": { "title": "Refine" }
+    "_meta": {
+      "title": "Nano Banana 2 - Edit"
+    }
   },
   "3": {
     "class_type": "SaveImage",
     "inputs": {
       "filename_prefix": "refine_iter",
-      "images": ["2", 0]
+      "images": [
+        "2",
+        0
+      ]
     },
-    "_meta": { "title": "Save Image" }
+    "_meta": {
+      "title": "Save Image"
+    }
   }
 }
