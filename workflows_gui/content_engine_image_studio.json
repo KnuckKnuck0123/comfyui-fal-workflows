@@ -6,7 +6,7 @@
   "nodes": [
     {
       "id": 1,
-      "type": "FalGenericAPI",
+      "type": "FalTextToImageAPI",
       "pos": [
         80,
         130
@@ -47,7 +47,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "FalGenericAPI"
+        "Node name for S&R": "FalTextToImageAPI"
       },
       "title": "1 - GENERATE",
       "widgets_values": [
@@ -99,7 +99,7 @@
     },
     {
       "id": 3,
-      "type": "FalGenericAPI",
+      "type": "FalImageToImageAPI",
       "pos": [
         460,
         650
@@ -140,7 +140,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "FalGenericAPI"
+        "Node name for S&R": "FalImageToImageAPI"
       },
       "title": "2 - EDIT / RENDER",
       "widgets_values": [
@@ -154,7 +154,7 @@
     },
     {
       "id": 4,
-      "type": "FalGenericAPI",
+      "type": "FalTextToImageAPI",
       "pos": [
         80,
         1170
@@ -195,7 +195,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "FalGenericAPI"
+        "Node name for S&R": "FalTextToImageAPI"
       },
       "title": "3 - VARIATIONS",
       "widgets_values": [
@@ -247,7 +247,7 @@
     },
     {
       "id": 6,
-      "type": "FalGenericAPI",
+      "type": "FalImageUpscaleAPI",
       "pos": [
         460,
         1690
@@ -288,7 +288,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "FalGenericAPI"
+        "Node name for S&R": "FalImageUpscaleAPI"
       },
       "title": "4 - UPSCALE",
       "widgets_values": [

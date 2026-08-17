@@ -66,7 +66,21 @@ INPUT_DIR = COMFY_DIR / "input"
 OUTPUT_DIR = COMFY_DIR / "output"
 UPSCALE_MODELS_DIR = COMFY_DIR / "models" / "upscale_models"
 REGISTRY_PATH = SCRIPT_DIR / "fal_models.json"
+CATALOG_PATH = SCRIPT_DIR / "catalog" / "fal_endpoint_catalog.json"
 MAIN_PY = COMFY_DIR / "main.py"
+
+FAL_NODE_CATEGORIES = {
+    "FalTextToImageAPI": ("text-to-image",),
+    "FalImageToImageAPI": ("image-to-image",),
+    "FalImageUpscaleAPI": ("image-to-image",),
+    "FalTextToVideoAPI": ("text-to-video",),
+    "FalImageToVideoAPI": ("image-to-video",),
+    "FalVideoToVideoAPI": ("video-to-video",),
+    "FalAudioToVideoAPI": ("audio-to-video",),
+    "FalTextTo3DAPI": ("text-to-3d",),
+    "FalImageTo3DAPI": ("image-to-3d",),
+    "Fal3DTo3DAPI": ("3d-to-3d",),
+}
 
 
 def _find_python():
@@ -115,6 +129,43 @@ def load_registry():
         sys.exit(2)
     with open(REGISTRY_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def load_endpoint_catalog():
+    if not CATALOG_PATH.exists():
+        err(f"Endpoint catalog not found: {CATALOG_PATH}")
+        err("Run: python tools/update_fal_catalog.py")
+        sys.exit(2)
+    with open(CATALOG_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def is_fal_endpoint_node(class_type):
+    return class_type == "FalGenericAPI" or class_type in FAL_NODE_CATEGORIES
+
+
+def endpoint_allowed_for_node(class_type, endpoint, catalog):
+    """Return whether an endpoint belongs to the node's exact Fal capability."""
+    if class_type == "FalGenericAPI":
+        return True
+    allowed_categories = FAL_NODE_CATEGORIES.get(class_type)
+    if not allowed_categories:
+        return False
+    model = catalog.get("models", {}).get(endpoint)
+    if not isinstance(model, dict) or model.get("category") not in allowed_categories:
+        return False
+    if class_type == "FalImageUpscaleAPI":
+        return endpoint in catalog.get("roles", {}).get("image-upscale", [])
+    return True
+
+
+def validate_endpoint_override(class_type, endpoint):
+    catalog = load_endpoint_catalog()
+    if not endpoint_allowed_for_node(class_type, endpoint, catalog):
+        categories = ", ".join(FAL_NODE_CATEGORIES.get(class_type, ("legacy/unrestricted",)))
+        err(f"Endpoint '{endpoint}' is not allowed by {class_type} ({categories}).")
+        err("Use the matching typed workflow, or refresh the catalog if the model is newly released.")
+        sys.exit(6)
 
 
 def print_list(registry):
@@ -280,8 +331,8 @@ def inject_params(wf, args, meta):
             if val == "PARAM_IMAGE":
                 inputs[key] = staged_image
             elif val == "PARAM_PROMPT":
-                if args.prompt is None and cls != "FalGenericAPI":
-                    # FalGenericAPI tolerates empty prompt (e.g. upscale); others usually need one.
+                if args.prompt is None and not is_fal_endpoint_node(cls):
+                    # Fal endpoint nodes tolerate an empty prompt (for example, upscalers).
                     err(f"Workflow '{args.workflow}' requires --prompt.")
                     sys.exit(6)
                 inputs[key] = args.prompt if args.prompt is not None else ""
@@ -289,18 +340,20 @@ def inject_params(wf, args, meta):
         # Optional overrides applied to the engine node.
         if args.seed is not None and "seed" in inputs:
             inputs["seed"] = args.seed
-        if args.endpoint and cls == "FalGenericAPI" and "endpoint" in inputs:
+        if args.endpoint and is_fal_endpoint_node(cls) and "endpoint" in inputs:
+            validate_endpoint_override(cls, args.endpoint)
             inputs["endpoint"] = args.endpoint
         if args.model:
-            # For FalGenericAPI --model is an endpoint alias; Nano Banana uses model;
+            # For Fal endpoint nodes --model is an endpoint alias; Nano Banana uses model;
             # legacy Gemini nodes and local upscalers use model_name.
-            if cls == "FalGenericAPI" and "endpoint" in inputs:
+            if is_fal_endpoint_node(cls) and "endpoint" in inputs:
+                validate_endpoint_override(cls, args.model)
                 inputs["endpoint"] = args.model
             if "model_name" in inputs:
                 inputs["model_name"] = args.model
             if cls == "NanoBananaGeminiImageNode" and "model" in inputs:
                 inputs["model"] = args.model
-        if args.extra and cls == "FalGenericAPI" and "extra_arguments" in inputs:
+        if args.extra and is_fal_endpoint_node(cls) and "extra_arguments" in inputs:
             # Validate it is JSON before sending.
             try:
                 json.loads(args.extra)
@@ -389,10 +442,10 @@ def build_parser(registry):
     p.add_argument("--list", action="store_true", help="List available workflows and exit.")
     p.add_argument("--prompt", type=str, default=None, help="Text prompt.")
     p.add_argument("--image", type=str, default=None, help="Input image path (for edit/upscale workflows).")
-    p.add_argument("--endpoint", type=str, default=None, help="Swap the Fal endpoint (FalGenericAPI workflows).")
+    p.add_argument("--endpoint", type=str, default=None, help="Swap the Fal endpoint within the workflow's capability.")
     p.add_argument("--model", type=str, default=None,
                    help="Swap the model: Fal endpoint, Gemini model_name, or local upscale .pth filename.")
-    p.add_argument("--extra", type=str, default=None, help="Extra Fal args as a JSON string (FalGenericAPI).")
+    p.add_argument("--extra", type=str, default=None, help="Extra Fal endpoint args as a JSON string.")
     p.add_argument("--seed", type=int, default=None, help="Override seed on the engine node.")
     p.add_argument("--paid", choices=list(PAID_UPSCALE_WORKFLOWS.keys()), default=None,
                    help="For upscale_local/render_then_upscale: use a paid API upscaler instead of local.")

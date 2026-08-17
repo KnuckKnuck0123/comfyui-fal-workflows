@@ -27,11 +27,18 @@ class ContentEngineImageStudioTests(unittest.TestCase):
     def test_api_has_four_fal_branches_and_three_lazy_switches(self):
         graph = load(API_PATH)
         nodes = list(graph.values())
-        fal_nodes = [node for node in nodes if node.get("class_type") == "FalGenericAPI"]
+        fal_nodes = [
+            node for node in nodes
+            if node.get("class_type") in {"FalTextToImageAPI", "FalImageToImageAPI", "FalImageUpscaleAPI"}
+        ]
         switches = [node for node in nodes if node.get("class_type") == "LazySwitchKJ"]
         self.assertEqual(len(fal_nodes), 4)
         self.assertEqual(len(switches), 3)
         self.assertEqual({node["inputs"]["endpoint"] for node in fal_nodes}, EXPECTED_ENDPOINTS)
+        self.assertEqual(
+            [node["class_type"] for node in fal_nodes],
+            ["FalTextToImageAPI", "FalImageToImageAPI", "FalTextToImageAPI", "FalImageUpscaleAPI"],
+        )
         self.assertTrue(all(node["inputs"]["switch"] is False for node in switches))
 
     def test_only_one_shared_save_and_preview_output_exists(self):

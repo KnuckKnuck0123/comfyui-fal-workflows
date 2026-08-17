@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 GUI = ROOT / "workflows_gui"
 API = ROOT / "workflows_api"
 REGISTRY = ROOT / "fal_models.json"
-NODE_HELPERS = ROOT.parent / "Comfy" / "ComfyUI" / "custom_nodes" / "fal-api" / "nodes"
+NODE_HELPERS = ROOT / "comfyui_nodes"
 LEGACY = (
     "3d_image_to_glb_trellis",
     "3d_image_to_glb_meshy",
@@ -21,6 +21,10 @@ MODELS = [
     "fal-ai/hyper3d/rodin/v2.5",
     "fal-ai/pixal3d",
     "fal-ai/hunyuan_world/image-to-world",
+    "meshy/v7/image-to-3d",
+    "meshy/v7/multi-image-to-3d",
+    "hitem3d/hi3d/image-to-3d",
+    "hitem3d/hi3d/multi-view-to-3d",
 ]
 
 
@@ -51,7 +55,7 @@ class ImageTo3DConsolidationTests(unittest.TestCase):
         graph = load_json(API / "3d_generic_fal.json")
         loads = [node for node in graph.values() if node.get("class_type") == "LoadImage"]
         self.assertEqual(len(loads), 2)
-        engine = next(node for node in graph.values() if node.get("class_type") == "FalGenericAPI")
+        engine = next(node for node in graph.values() if node.get("class_type") == "FalImageTo3DAPI")
         self.assertEqual(engine["inputs"]["endpoint"], "fal-ai/trellis-2")
         self.assertIn("image_2", engine["inputs"])
 
@@ -68,6 +72,18 @@ class ImageTo3DConsolidationTests(unittest.TestCase):
         self.assertEqual(
             mapper.map_uploaded_images("fal-ai/hyper3d/rodin/v2.5", ["one", "two"]),
             {"image_urls": ["one", "two"]},
+        )
+        self.assertEqual(
+            mapper.map_uploaded_images("meshy/v7/image-to-3d", ["one", "two"]),
+            {"image_url": "one"},
+        )
+        self.assertEqual(
+            mapper.map_uploaded_images("meshy/v7/multi-image-to-3d", ["one", "two"]),
+            {"image_urls": ["one", "two"]},
+        )
+        self.assertEqual(
+            mapper.map_uploaded_images("hitem3d/hi3d/multi-view-to-3d", ["front", "right"]),
+            {"front_image_url": "front", "right_image_url": "right"},
         )
 
     def test_3d_result_urls_are_extracted_for_shared_output(self):

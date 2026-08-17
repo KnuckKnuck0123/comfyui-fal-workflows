@@ -135,6 +135,26 @@ export GEMINI_API_KEY=paste-your-gemini-key-here    # macOS/Linux
 
    Restart ComfyUI one more time after installing.
 
+### Keep Fal models current
+
+The workflow pack uses separate catalog-backed nodes for image generation,
+image editing, upscaling, text/image/video-to-video, and text/image/3D-to-3D.
+A 3D endpoint therefore does not appear in an image node.
+
+Run this from the repository whenever you want to refresh Fal and redeploy the
+Desktop workflows:
+
+```powershell
+python .\tools\update_fal_catalog.py `
+  --deploy-node-root 'C:\Users\<you>\Documents\ComfyUI\custom_nodes\fal-api' `
+  --deploy-workflows-dir 'C:\Users\<you>\Documents\ComfyUI\user\default\workflows'
+```
+
+The command reads Fal's official Models API, validates its response, reports
+new or removed endpoints by capability, updates `catalog/fal_endpoint_catalog.json`,
+and deploys the typed selectors. Use `--verbose` to list every endpoint change.
+Restart ComfyUI after the command changes the installed node catalog.
+
 ---
 
 ## Step 4: Make your first image
@@ -222,13 +242,14 @@ workflows may upload inputs to Fal; `upscale_local` stays on your machine.
 
 ### 3D (image → .glb model)
 - `3d_generic_fal` — consolidated single/multi-view studio; swap Trellis 2,
-  Meshy 6, Meshy 6 Multi, Rodin 2.5, Pixal3D, or Hunyuan World
+  Meshy 6/7, Hi3D, Rodin 2.5, Pixal3D, Hunyuan World, or another cataloged
+  image-to-3D endpoint
 
 ### Video (text or image → video)
 - `video_studio_fal` — Seedance text, image, first/last-frame, and reference-to-video modes
 - `video_veo3_text` — Google Veo3 (best quality, includes audio)
 - `video_kling_image` — Kling Pro 1.6 image + motion prompt
-- `video_generic_fal` — swap any Fal video endpoint
+- `video_generic_fal` — swap any cataloged image-to-video endpoint
 - `video_preview_from_url` — utility: preview a hosted video URL
 
 ---
@@ -305,6 +326,9 @@ comfyui-fal-workflows/
 ├── workflows_api/           26 workflow JSONs for the CLI runner / agents (API format)
 ├── run_fal_workflow.py      CLI runner (optional, power-user)
 ├── fal_models.json          Workflow registry (metadata for the runner)
+├── catalog/                 Validated active Fal endpoints by capability
+├── comfyui_nodes/           Typed selectors and schema adapters
+├── tools/update_fal_catalog.py  Refresh + deployment command
 ├── docs/
 │   ├── WORKFLOWS.md         Full workflow reference — parameters, swappable engines
 │   ├── AI_AGENT_GUIDE.md    Loadable context for AI agents

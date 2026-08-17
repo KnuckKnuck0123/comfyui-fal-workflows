@@ -118,7 +118,7 @@
     },
     {
       "id": 4,
-      "type": "FalGenericAPI",
+      "type": "FalImageToImageAPI",
       "pos": [
         920,
         200
@@ -159,7 +159,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "FalGenericAPI"
+        "Node name for S&R": "FalImageToImageAPI"
       },
       "title": "Stage 2: refine (swap endpoint to try any /edit model)",
       "widgets_values": [

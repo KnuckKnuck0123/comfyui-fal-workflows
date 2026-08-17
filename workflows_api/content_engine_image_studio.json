@@ -1,6 +1,6 @@
 {
   "1": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalTextToImageAPI",
     "inputs": {
       "endpoint": "fal-ai/flux-2",
       "prompt": "PARAM_PROMPT",
@@ -22,7 +22,7 @@
     }
   },
   "3": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalImageToImageAPI",
     "inputs": {
       "endpoint": "openai/gpt-image-2/edit",
       "prompt": "PARAM_PROMPT",
@@ -39,7 +39,7 @@
     }
   },
   "4": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalTextToImageAPI",
     "inputs": {
       "endpoint": "fal-ai/flux-2",
       "prompt": "PARAM_PROMPT",
@@ -61,7 +61,7 @@
     }
   },
   "6": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalImageUpscaleAPI",
     "inputs": {
       "endpoint": "fal-ai/topaz/upscale/image",
       "prompt": "",

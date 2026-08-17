@@ -1,6 +1,6 @@
 {
   "1": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalTextToVideoAPI",
     "inputs": {
       "endpoint": "bytedance/seedance-2.0/text-to-video",
       "prompt": "PARAM_PROMPT",
@@ -22,7 +22,7 @@
     }
   },
   "3": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalImageToVideoAPI",
     "inputs": {
       "endpoint": "bytedance/seedance-2.0/image-to-video",
       "prompt": "PARAM_PROMPT",
@@ -48,7 +48,7 @@
     }
   },
   "5": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalImageToVideoAPI",
     "inputs": {
       "endpoint": "bytedance/seedance-2.0/image-to-video",
       "prompt": "PARAM_PROMPT",
@@ -78,7 +78,7 @@
     }
   },
   "7": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalImageToVideoAPI",
     "inputs": {
       "endpoint": "bytedance/seedance-2.0/reference-to-video",
       "prompt": "PARAM_PROMPT",

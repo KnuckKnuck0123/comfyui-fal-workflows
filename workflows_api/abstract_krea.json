@@ -1,6 +1,6 @@
 {
   "1": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalTextToImageAPI",
     "inputs": {
       "endpoint": "krea/v2/large/text-to-image",
       "prompt": "PARAM_PROMPT",
@@ -8,14 +8,21 @@
       "aspect_ratio": "16:9",
       "extra_arguments": "{}"
     },
-    "_meta": { "title": "Fal Generic API (Krea 2 - swappable)" }
+    "_meta": {
+      "title": "Fal Generic API (Krea 2 - swappable)"
+    }
   },
   "2": {
     "class_type": "SaveImage",
     "inputs": {
       "filename_prefix": "abstract_krea",
-      "images": ["1", 0]
+      "images": [
+        "1",
+        0
+      ]
     },
-    "_meta": { "title": "Save Image" }
+    "_meta": {
+      "title": "Save Image"
+    }
   }
 }

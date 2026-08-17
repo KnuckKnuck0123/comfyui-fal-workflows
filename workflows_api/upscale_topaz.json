@@ -4,26 +4,38 @@
     "inputs": {
       "image": "PARAM_IMAGE"
     },
-    "_meta": { "title": "Load Image to Upscale" }
+    "_meta": {
+      "title": "Load Image to Upscale"
+    }
   },
   "2": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalImageUpscaleAPI",
     "inputs": {
       "endpoint": "fal-ai/topaz/upscale/image",
       "prompt": "",
-      "image_1": ["1", 0],
+      "image_1": [
+        "1",
+        0
+      ],
       "seed": -1,
       "aspect_ratio": "auto",
       "extra_arguments": "{}"
     },
-    "_meta": { "title": "Topaz Upscale Image (fal, paid)" }
+    "_meta": {
+      "title": "Topaz Upscale Image (fal, paid)"
+    }
   },
   "3": {
     "class_type": "SaveImage",
     "inputs": {
       "filename_prefix": "upscale_topaz",
-      "images": ["2", 0]
+      "images": [
+        "2",
+        0
+      ]
     },
-    "_meta": { "title": "Save Image" }
+    "_meta": {
+      "title": "Save Image"
+    }
   }
 }

@@ -18,7 +18,7 @@
     }
   },
   "3": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalImageTo3DAPI",
     "inputs": {
       "endpoint": "fal-ai/trellis-2",
       "prompt": "PARAM_PROMPT",

@@ -26,22 +26,22 @@ def fal_inputs(endpoint, prompt, image_1=None, image_2=None):
 
 def build_api():
     return {
-        "1": {"class_type": "FalGenericAPI", "inputs": fal_inputs(
+        "1": {"class_type": "FalTextToVideoAPI", "inputs": fal_inputs(
             "bytedance/seedance-2.0/text-to-video", "PARAM_PROMPT"
         ), "_meta": {"title": "1 - Text to video"}},
         "2": {"class_type": "LoadImage", "inputs": {"image": "PARAM_IMAGE"},
               "_meta": {"title": "Start / primary reference image"}},
-        "3": {"class_type": "FalGenericAPI", "inputs": fal_inputs(
+        "3": {"class_type": "FalImageToVideoAPI", "inputs": fal_inputs(
             "bytedance/seedance-2.0/image-to-video", "PARAM_PROMPT", ["2", 0]
         ), "_meta": {"title": "2 - Image to video"}},
         "4": {"class_type": "LoadImage", "inputs": {"image": "PARAM_IMAGE_2"},
               "_meta": {"title": "End frame"}},
-        "5": {"class_type": "FalGenericAPI", "inputs": fal_inputs(
+        "5": {"class_type": "FalImageToVideoAPI", "inputs": fal_inputs(
             "bytedance/seedance-2.0/image-to-video", "PARAM_PROMPT", ["2", 0], ["4", 0]
         ), "_meta": {"title": "3 - First / last frame"}},
         "6": {"class_type": "LoadImage", "inputs": {"image": "PARAM_IMAGE_2"},
               "_meta": {"title": "Second reference image"}},
-        "7": {"class_type": "FalGenericAPI", "inputs": fal_inputs(
+        "7": {"class_type": "FalImageToVideoAPI", "inputs": fal_inputs(
             "bytedance/seedance-2.0/reference-to-video", "PARAM_PROMPT", ["2", 0], ["6", 0]
         ), "_meta": {"title": "4 - Reference to video; prompt with @Image1 and @Image2"}},
         "8": {"class_type": "LazySwitchKJ", "inputs": {
@@ -83,8 +83,8 @@ def load_node(node_id, pos, order, links, title):
     ], ["example.png", "image"], title)
 
 
-def fal_node(node_id, pos, order, endpoint, prompt, url_link, image_1=None, image_2=None, title=""):
-    return node(node_id, "FalGenericAPI", pos, [470, 340], order, [
+def fal_node(node_id, node_type, pos, order, endpoint, prompt, url_link, image_1=None, image_2=None, title=""):
+    return node(node_id, node_type, pos, [470, 340], order, [
         {"name": "image_1", "type": "IMAGE", "link": image_1, "shape": 7},
         {"name": "image_2", "type": "IMAGE", "link": image_2, "shape": 7},
     ], [
@@ -102,19 +102,19 @@ def switch_node(node_id, pos, order, false_link, true_link, output_link, title):
 
 def build_gui():
     nodes = [
-        fal_node(1, [80, 120], 0, "bytedance/seedance-2.0/text-to-video",
+        fal_node(1, "FalTextToVideoAPI", [80, 120], 0, "bytedance/seedance-2.0/text-to-video",
                  "Cinematic architectural sequence, deliberate camera movement, realistic motion",
                  1, title="1 - TEXT TO VIDEO"),
         load_node(2, [80, 600], 1, [2, 4, 7], "START / PRIMARY REFERENCE - uploads to Fal"),
-        fal_node(3, [460, 600], 2, "bytedance/seedance-2.0/image-to-video",
+        fal_node(3, "FalImageToVideoAPI", [460, 600], 2, "bytedance/seedance-2.0/image-to-video",
                  "Slow cinematic dolly forward, subtle environmental movement", 3, 2,
                  title="2 - IMAGE TO VIDEO"),
         load_node(4, [80, 1080], 3, [5], "END FRAME - uploads to Fal"),
-        fal_node(5, [460, 1080], 4, "bytedance/seedance-2.0/image-to-video",
+        fal_node(5, "FalImageToVideoAPI", [460, 1080], 4, "bytedance/seedance-2.0/image-to-video",
                  "Create a coherent cinematic transition from the start frame to the end frame", 6, 4, 5,
                  "3 - FIRST / LAST FRAME"),
         load_node(6, [80, 1560], 5, [8], "SECOND REFERENCE - uploads to Fal"),
-        fal_node(7, [460, 1560], 6, "bytedance/seedance-2.0/reference-to-video",
+        fal_node(7, "FalImageToVideoAPI", [460, 1560], 6, "bytedance/seedance-2.0/reference-to-video",
                  "Use @Image1 as the primary scene and @Image2 as a visual reference. Preserve identity and design.",
                  9, 7, 8, "4 - REFERENCE TO VIDEO"),
         switch_node(8, [1060, 560], 7, 1, 3, [10], "IMAGE-TO-VIDEO MODE"),
@@ -173,7 +173,7 @@ def main():
         "file": f"{NAME}.json",
         "purpose": "Fal Video Studio with lazy-routed text, image, first/last-frame, and reference-to-video modes.",
         "auth": "fal", "needs_image": False,
-        "engine_node": "FalGenericAPI (x4) + LazySwitchKJ (x3)",
+        "engine_node": "Capability-scoped Fal video nodes (x4) + LazySwitchKJ (x3)",
         "default_mode": "text_to_video",
         "mode_precedence": ["reference_to_video", "first_last_frame", "image_to_video", "text_to_video"],
         "note": "Only the selected paid branch executes. Image modes upload source images to Fal."

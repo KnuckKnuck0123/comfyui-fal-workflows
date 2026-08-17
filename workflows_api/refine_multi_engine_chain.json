@@ -30,7 +30,7 @@
     }
   },
   "3": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalImageToImageAPI",
     "inputs": {
       "endpoint": "fal-ai/flux-2/edit",
       "prompt": "PARAM_PROMPT_2",

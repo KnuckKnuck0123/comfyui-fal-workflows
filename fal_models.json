@@ -1,5 +1,5 @@
 {
-  "_comment": "Model/engine registry for run_fal_workflow.py. 'workflows' maps a friendly workflow name to its JSON file, the auth it needs, and (for FalGenericAPI-based workflows) the swappable endpoints you can pass with --endpoint. Costs: 'local' = free (your GPU), 'fal' = Fal API credits (FAL_KEY), 'gemini' = Google Gemini credits (GEMINI_API_KEY).",
+  "_comment": "Workflow registry for run_fal_workflow.py. Fal endpoint discovery and capability boundaries come from catalog/fal_endpoint_catalog.json; swappable_values is a curated subset. Costs: 'local' = free (your GPU), 'fal' = Fal API credits (FAL_KEY), 'gemini' = Google Gemini credits (GEMINI_API_KEY).",
   "workflows": {
     "render_kontext": {
       "file": "render_kontext.json",
@@ -27,7 +27,7 @@
       "purpose": "Screenshot/sketch -> render via a swappable Fal edit endpoint.",
       "auth": "fal",
       "needs_image": true,
-      "engine_node": "FalGenericAPI",
+      "engine_node": "FalImageToImageAPI",
       "swappable_field": "endpoint",
       "swappable_values": [
         "openai/gpt-image-2/edit",
@@ -46,7 +46,6 @@
         "fal-ai/flux-krea-lora/inpainting",
         "fal-ai/bytedance/seedream/v4/edit",
         "fal-ai/bytedance/seedream/v4.5/edit",
-        "fal-ai/bytedance/seedream/v5/lite/edit",
         "xai/grok-imagine-image/edit",
         "xai/grok-imagine-image/quality/edit",
         "fal-ai/qwen-image-edit-2511-multiple-angles"
@@ -58,7 +57,7 @@
       "purpose": "Text-to-image abstract via a swappable Fal endpoint.",
       "auth": "fal",
       "needs_image": false,
-      "engine_node": "FalGenericAPI",
+      "engine_node": "FalTextToImageAPI",
       "swappable_field": "endpoint",
       "swappable_values": [
         "fal-ai/z-image/turbo",
@@ -83,7 +82,7 @@
       "purpose": "Text-to-image via Krea 2 family and FLUX.1 Krea collab (aesthetic-focused).",
       "auth": "fal",
       "needs_image": false,
-      "engine_node": "FalGenericAPI",
+      "engine_node": "FalTextToImageAPI",
       "swappable_field": "endpoint",
       "swappable_values": [
         "krea/v2/large/text-to-image",
@@ -103,7 +102,7 @@
       "purpose": "Midjourney-style multi-generation: one prompt -> N image variations. Swap endpoint to test any text-to-image model with the same prompt.",
       "auth": "fal",
       "needs_image": false,
-      "engine_node": "FalGenericAPI",
+      "engine_node": "FalTextToImageAPI",
       "swappable_field": "endpoint",
       "swappable_values": [
         "fal-ai/flux-2",
@@ -150,7 +149,7 @@
       "purpose": "Multi-engine 3-stage refinement chain: Flux Kontext -> any Fal /edit endpoint -> Nano Banana (Gemini). Lets you compare how different models handle each refinement step.",
       "auth": "fal+gemini",
       "needs_image": true,
-      "engine_node": "FluxProKontext_fal + FalGenericAPI + NanoBananaGeminiImageNode",
+      "engine_node": "FluxProKontext_fal + FalImageToImageAPI + NanoBananaGeminiImageNode",
       "note": "Any /edit-capable Fal endpoint works in Stage 2 (fal-ai/flux-2/edit, openai/gpt-image-2/edit, fal-ai/bytedance/seedream/v4.5/edit, fal-ai/flux-pro/kontext/max, fal-ai/gemini-3-pro-image-preview/edit, etc.). Mute stages to skip them."
     },
     "refine_from_output_generic": {
@@ -158,7 +157,7 @@
       "purpose": "Interactive refinement via ANY Fal /edit endpoint (not just Nano Banana). Pick a prior output, choose the engine via the endpoint dropdown, prompt to refine.",
       "auth": "fal",
       "needs_image": false,
-      "engine_node": "FalGenericAPI",
+      "engine_node": "FalImageToImageAPI",
       "swappable_field": "endpoint",
       "swappable_values": [
         "fal-ai/flux-2/edit",
@@ -171,7 +170,6 @@
         "fal-ai/gpt-image-1.5/edit",
         "fal-ai/bytedance/seedream/v4/edit",
         "fal-ai/bytedance/seedream/v4.5/edit",
-        "fal-ai/bytedance/seedream/v5/lite/edit",
         "xai/grok-imagine-image/edit",
         "xai/grok-imagine-image/quality/edit",
         "fal-ai/qwen-image-edit-2511-multiple-angles",
@@ -183,7 +181,7 @@
       "purpose": "Image-to-image abstract restyle via a swappable Fal edit endpoint.",
       "auth": "fal",
       "needs_image": true,
-      "engine_node": "FalGenericAPI",
+      "engine_node": "FalImageToImageAPI",
       "swappable_field": "endpoint",
       "swappable_values": [
         "fal-ai/flux-2/edit",
@@ -195,7 +193,6 @@
         "fal-ai/flux-kontext/dev",
         "fal-ai/bytedance/seedream/v4/edit",
         "fal-ai/bytedance/seedream/v4.5/edit",
-        "fal-ai/bytedance/seedream/v5/lite/edit",
         "openai/gpt-image-2/edit",
         "fal-ai/gpt-image-1.5/edit",
         "xai/grok-imagine-image/edit",
@@ -236,7 +233,7 @@
       "purpose": "Paid Fal Topaz image upscaler (highest-end).",
       "auth": "fal",
       "needs_image": true,
-      "engine_node": "FalGenericAPI",
+      "engine_node": "FalImageUpscaleAPI",
       "swappable": false
     },
     "video_veo3_text": {
@@ -257,32 +254,21 @@
     },
     "video_generic_fal": {
       "file": "video_generic_fal.json",
-      "purpose": "Fal video via a swappable endpoint. Test any Kling / Seedance / Veo / Wan / Hailuo / Happy-Horse endpoint with the same graph.",
+      "purpose": "Fal image-to-video via a swappable image-to-video endpoint.",
       "auth": "fal",
       "needs_image": false,
-      "engine_node": "FalGenericAPI",
+      "engine_node": "FalImageToVideoAPI",
       "swappable_field": "endpoint",
       "swappable_values": [
-        "bytedance/seedance-2.0/text-to-video",
         "bytedance/seedance-2.0/image-to-video",
-        "bytedance/seedance-2.0/fast/text-to-video",
         "bytedance/seedance-2.0/fast/image-to-video",
         "bytedance/seedance-2.0/reference-to-video",
         "fal-ai/kling-video/v3/pro/image-to-video",
-        "fal-ai/kling-video/v3/pro/text-to-video",
-        "fal-ai/kling-video/v3/standard/text-to-video",
         "fal-ai/kling-video/v3/standard/image-to-video",
-        "fal-ai/kling-video/o3/pro/text-to-video",
-        "fal-ai/kling-video/o3/pro/video-to-video/edit",
-        "fal-ai/bernini-r/text-to-video",
         "fal-ai/bernini-r/reference-to-video",
-        "fal-ai/bernini-r/edit-video",
-        "fal-ai/bernini-r/reference-edit-video",
-        "alibaba/happy-horse/image-to-video",
-        "alibaba/happy-horse/video-edit",
-        "fal-ai/depth-anything-video"
+        "alibaba/happy-horse/image-to-video"
       ],
-      "note": "Model-specific args go in extra_arguments as JSON, e.g. {\"duration\":\"5\",\"resolution\":\"720p\"}. Output URL comes back on the raw_response_or_url slot."
+      "note": "Only image-to-video endpoints appear here. Use Video Studio's text-to-video branch for text models. Model-specific args go in extra_arguments as JSON."
     },
     "video_preview_from_url": {
       "file": "video_preview_from_url.json",
@@ -297,7 +283,7 @@
       "purpose": "Canonical single- or multi-view image-to-3D workflow with swappable Fal models.",
       "auth": "fal",
       "needs_image": true,
-      "engine_node": "FalGenericAPI",
+      "engine_node": "FalImageTo3DAPI",
       "swappable_field": "endpoint",
       "swappable_values": [
         "fal-ai/trellis-2",
@@ -305,7 +291,11 @@
         "fal-ai/meshy/v6/multi-image-to-3d",
         "fal-ai/hyper3d/rodin/v2.5",
         "fal-ai/pixal3d",
-        "fal-ai/hunyuan_world/image-to-world"
+        "fal-ai/hunyuan_world/image-to-world",
+        "meshy/v7/image-to-3d",
+        "meshy/v7/multi-image-to-3d",
+        "hitem3d/hi3d/image-to-3d",
+        "hitem3d/hi3d/multi-view-to-3d"
       ],
       "note": "Trellis, Meshy single, Pixal3D, and Hunyuan use the primary view. Meshy Multi and Rodin use both views. Hunyuan returns a world asset rather than a conventional object mesh."
     },
@@ -340,7 +330,7 @@
       "purpose": "Hosted-first Image Studio with safely routed Generate, Edit / Render, Variations, and Upscale modes.",
       "auth": "fal",
       "needs_image": false,
-      "engine_node": "FalGenericAPI (x4) + LazySwitchKJ (x3)",
+      "engine_node": "Capability-scoped Fal image nodes (x4) + LazySwitchKJ (x3)",
       "default_mode": "generate",
       "mode_precedence": [
         "upscale",
@@ -371,7 +361,7 @@
       "purpose": "Fal Video Studio with lazy-routed text, image, first/last-frame, and reference-to-video modes.",
       "auth": "fal",
       "needs_image": false,
-      "engine_node": "FalGenericAPI (x4) + LazySwitchKJ (x3)",
+      "engine_node": "Capability-scoped Fal video nodes (x4) + LazySwitchKJ (x3)",
       "default_mode": "text_to_video",
       "mode_precedence": [
         "reference_to_video",
