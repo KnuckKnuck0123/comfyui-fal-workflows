@@ -4,26 +4,38 @@
     "inputs": {
       "image": "PARAM_IMAGE"
     },
-    "_meta": { "title": "Load Input (screenshot/sketch)" }
+    "_meta": {
+      "title": "Load Input (screenshot/sketch)"
+    }
   },
   "2": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalImageToImageAPI",
     "inputs": {
       "endpoint": "openai/gpt-image-2/edit",
       "prompt": "PARAM_PROMPT",
-      "image_1": ["1", 0],
+      "image_1": [
+        "1",
+        0
+      ],
       "seed": -1,
       "aspect_ratio": "auto",
       "extra_arguments": "{}"
     },
-    "_meta": { "title": "Fal Generic API (swappable endpoint)" }
+    "_meta": {
+      "title": "Fal Generic API (swappable endpoint)"
+    }
   },
   "3": {
     "class_type": "SaveImage",
     "inputs": {
       "filename_prefix": "render_generic",
-      "images": ["2", 0]
+      "images": [
+        "2",
+        0
+      ]
     },
-    "_meta": { "title": "Save Image" }
+    "_meta": {
+      "title": "Save Image"
+    }
   }
 }

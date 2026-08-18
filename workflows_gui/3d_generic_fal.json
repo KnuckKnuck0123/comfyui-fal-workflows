@@ -82,7 +82,7 @@
     },
     {
       "id": 3,
-      "type": "FalGenericAPI",
+      "type": "FalImageTo3DAPI",
       "pos": [
         500,
         260
@@ -123,7 +123,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "FalGenericAPI"
+        "Node name for S&R": "FalImageTo3DAPI"
       },
       "title": "IMAGE TO 3D - SELECT MODEL",
       "widgets_values": [
@@ -241,7 +241,11 @@
         "fal-ai/meshy/v6/multi-image-to-3d",
         "fal-ai/hyper3d/rodin/v2.5",
         "fal-ai/pixal3d",
-        "fal-ai/hunyuan_world/image-to-world"
+        "fal-ai/hunyuan_world/image-to-world",
+        "meshy/v7/image-to-3d",
+        "meshy/v7/multi-image-to-3d",
+        "hitem3d/hi3d/image-to-3d",
+        "hitem3d/hi3d/multi-view-to-3d"
       ],
       "multi_view_models": [
         "fal-ai/meshy/v6/multi-image-to-3d",

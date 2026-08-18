@@ -13,6 +13,10 @@ MODELS = [
     "fal-ai/hyper3d/rodin/v2.5",
     "fal-ai/pixal3d",
     "fal-ai/hunyuan_world/image-to-world",
+    "meshy/v7/image-to-3d",
+    "meshy/v7/multi-image-to-3d",
+    "hitem3d/hi3d/image-to-3d",
+    "hitem3d/hi3d/multi-view-to-3d",
 ]
 
 
@@ -20,7 +24,7 @@ def build_api():
     return {
         "1": {"class_type": "LoadImage", "inputs": {"image": "PARAM_IMAGE"}, "_meta": {"title": "Primary image"}},
         "2": {"class_type": "LoadImage", "inputs": {"image": "PARAM_IMAGE_2"}, "_meta": {"title": "Optional second view"}},
-        "3": {"class_type": "FalGenericAPI", "inputs": {
+        "3": {"class_type": "FalImageTo3DAPI", "inputs": {
             "endpoint": "fal-ai/trellis-2", "prompt": "PARAM_PROMPT",
             "image_1": ["1", 0], "image_2": ["2", 0], "seed": -1,
             "aspect_ratio": "auto", "extra_arguments": "{}"
@@ -48,13 +52,13 @@ def build_gui():
         load_node(1, 180, 0, 1, "PRIMARY VIEW - uploads to Fal"),
         load_node(2, 590, 1, 2, "SECOND VIEW - Meshy Multi / Rodin"),
         {
-            "id": 3, "type": "FalGenericAPI", "pos": [500, 260], "size": [520, 390],
+            "id": 3, "type": "FalImageTo3DAPI", "pos": [500, 260], "size": [520, 390],
             "flags": {}, "order": 2, "mode": 0,
             "inputs": [{"name": "image_1", "type": "IMAGE", "link": 1, "shape": 7},
                        {"name": "image_2", "type": "IMAGE", "link": 2, "shape": 7}],
             "outputs": [{"name": "image", "type": "IMAGE", "links": None},
                         {"name": "raw_response_or_url", "type": "STRING", "links": [3]}],
-            "properties": {"Node name for S&R": "FalGenericAPI"},
+            "properties": {"Node name for S&R": "FalImageTo3DAPI"},
             "title": "IMAGE TO 3D - SELECT MODEL",
             "widgets_values": ["fal-ai/trellis-2", "", -1, "fixed", "auto", "{}"],
         },
@@ -97,7 +101,7 @@ def main():
         registry["workflows"].pop(name, None)
     registry["workflows"][NAME] = {
         "file": f"{NAME}.json", "purpose": "Canonical single- or multi-view image-to-3D workflow with swappable Fal models.",
-        "auth": "fal", "needs_image": True, "engine_node": "FalGenericAPI",
+        "auth": "fal", "needs_image": True, "engine_node": "FalImageTo3DAPI",
         "swappable_field": "endpoint", "swappable_values": MODELS,
         "note": "Trellis, Meshy single, Pixal3D, and Hunyuan use the primary view. Meshy Multi and Rodin use both views. Hunyuan returns a world asset rather than a conventional object mesh."
     }

@@ -24,7 +24,7 @@ def fal_inputs(endpoint, prompt, extra_arguments="{}", image=None):
 def build_api():
     return {
         "1": {
-            "class_type": "FalGenericAPI",
+            "class_type": "FalTextToImageAPI",
             "inputs": fal_inputs(
                 "fal-ai/flux-2",
                 "PARAM_PROMPT",
@@ -38,14 +38,14 @@ def build_api():
             "_meta": {"title": "Edit source - uploaded to Fal when selected"},
         },
         "3": {
-            "class_type": "FalGenericAPI",
+            "class_type": "FalImageToImageAPI",
             "inputs": fal_inputs(
                 "openai/gpt-image-2/edit", "PARAM_PROMPT", "{}", ["2", 0]
             ),
             "_meta": {"title": "2 - Edit / Render"},
         },
         "4": {
-            "class_type": "FalGenericAPI",
+            "class_type": "FalTextToImageAPI",
             "inputs": fal_inputs(
                 "fal-ai/flux-2",
                 "PARAM_PROMPT",
@@ -59,7 +59,7 @@ def build_api():
             "_meta": {"title": "Upscale source - uploaded to Fal when selected"},
         },
         "6": {
-            "class_type": "FalGenericAPI",
+            "class_type": "FalImageUpscaleAPI",
             "inputs": fal_inputs(
                 "fal-ai/topaz/upscale/image", "", "{}", ["5", 0]
             ),
@@ -110,14 +110,14 @@ def node(node_id, kind, pos, size, order, inputs, outputs, widgets, title):
     }
 
 
-def fal_node(node_id, pos, order, endpoint, prompt, extra, output_link, title, image_link=None):
+def fal_node(node_id, node_type, pos, order, endpoint, prompt, extra, output_link, title, image_link=None):
     inputs = [
         {"name": "image_1", "type": "IMAGE", "link": image_link, "shape": 7},
         {"name": "image_2", "type": "IMAGE", "link": None, "shape": 7},
     ]
     return node(
         node_id,
-        "FalGenericAPI",
+        node_type,
         pos,
         [470, 340],
         order,
@@ -168,24 +168,24 @@ def switch_node(node_id, pos, order, false_link, true_link, output_link, title):
 def build_gui():
     nodes = [
         fal_node(
-            1, [80, 130], 0, "fal-ai/flux-2",
+            1, "FalTextToImageAPI", [80, 130], 0, "fal-ai/flux-2",
             "architectural concept image, editorial composition, compelling light",
             '{"image_size":"landscape_16_9","num_images":1}', 1, "1 - GENERATE",
         ),
         load_node(2, [80, 650], 1, 2, "Edit source - uploads input images to Fal"),
         fal_node(
-            3, [460, 650], 2, "openai/gpt-image-2/edit",
+            3, "FalImageToImageAPI", [460, 650], 2, "openai/gpt-image-2/edit",
             "transform this source while preserving its composition and architectural intent",
             "{}", 3, "2 - EDIT / RENDER", 2,
         ),
         fal_node(
-            4, [80, 1170], 3, "fal-ai/flux-2",
+            4, "FalTextToImageAPI", [80, 1170], 3, "fal-ai/flux-2",
             "architectural concept image, four distinct design directions",
             '{"image_size":"landscape_16_9","num_images":4}', 4, "3 - VARIATIONS",
         ),
         load_node(5, [80, 1690], 4, 6, "Upscale source - uploads input images to Fal"),
         fal_node(
-            6, [460, 1690], 5, "fal-ai/topaz/upscale/image", "", "{}", 7,
+            6, "FalImageUpscaleAPI", [460, 1690], 5, "fal-ai/topaz/upscale/image", "", "{}", 7,
             "4 - UPSCALE", 6,
         ),
         switch_node(7, [1040, 570], 6, 1, 3, [5], "EDIT MODE"),
@@ -258,7 +258,7 @@ def main():
         "purpose": "Hosted-first Image Studio with safely routed Generate, Edit / Render, Variations, and Upscale modes.",
         "auth": "fal",
         "needs_image": False,
-        "engine_node": "FalGenericAPI (x4) + LazySwitchKJ (x3)",
+        "engine_node": "Capability-scoped Fal image nodes (x4) + LazySwitchKJ (x3)",
         "default_mode": "generate",
         "mode_precedence": ["upscale", "variations", "edit", "generate"],
         "note": "Only the selected lazy branch executes. Edit and upscale upload input images to Fal.",

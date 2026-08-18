@@ -4,26 +4,38 @@
     "inputs": {
       "image": "PARAM_IMAGE"
     },
-    "_meta": { "title": "Load Prior Output" }
+    "_meta": {
+      "title": "Load Prior Output"
+    }
   },
   "2": {
-    "class_type": "FalGenericAPI",
+    "class_type": "FalImageToImageAPI",
     "inputs": {
       "endpoint": "fal-ai/flux-2/edit",
       "prompt": "PARAM_PROMPT",
-      "image_1": ["1", 0],
+      "image_1": [
+        "1",
+        0
+      ],
       "seed": -1,
       "aspect_ratio": "auto",
       "extra_arguments": "{}"
     },
-    "_meta": { "title": "Refine (swappable endpoint)" }
+    "_meta": {
+      "title": "Refine (swappable endpoint)"
+    }
   },
   "3": {
     "class_type": "SaveImage",
     "inputs": {
       "filename_prefix": "refine_iter_generic",
-      "images": ["2", 0]
+      "images": [
+        "2",
+        0
+      ]
     },
-    "_meta": { "title": "Save Image" }
+    "_meta": {
+      "title": "Save Image"
+    }
   }
 }

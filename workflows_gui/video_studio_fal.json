@@ -6,7 +6,7 @@
   "nodes": [
     {
       "id": 1,
-      "type": "FalGenericAPI",
+      "type": "FalTextToVideoAPI",
       "pos": [
         80,
         120
@@ -47,7 +47,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "FalGenericAPI"
+        "Node name for S&R": "FalTextToVideoAPI"
       },
       "title": "1 - TEXT TO VIDEO",
       "widgets_values": [
@@ -101,7 +101,7 @@
     },
     {
       "id": 3,
-      "type": "FalGenericAPI",
+      "type": "FalImageToVideoAPI",
       "pos": [
         460,
         600
@@ -142,7 +142,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "FalGenericAPI"
+        "Node name for S&R": "FalImageToVideoAPI"
       },
       "title": "2 - IMAGE TO VIDEO",
       "widgets_values": [
@@ -194,7 +194,7 @@
     },
     {
       "id": 5,
-      "type": "FalGenericAPI",
+      "type": "FalImageToVideoAPI",
       "pos": [
         460,
         1080
@@ -235,7 +235,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "FalGenericAPI"
+        "Node name for S&R": "FalImageToVideoAPI"
       },
       "title": "3 - FIRST / LAST FRAME",
       "widgets_values": [
@@ -287,7 +287,7 @@
     },
     {
       "id": 7,
-      "type": "FalGenericAPI",
+      "type": "FalImageToVideoAPI",
       "pos": [
         460,
         1560
@@ -328,7 +328,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "FalGenericAPI"
+        "Node name for S&R": "FalImageToVideoAPI"
       },
       "title": "4 - REFERENCE TO VIDEO",
       "widgets_values": [

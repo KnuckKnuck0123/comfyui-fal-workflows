@@ -356,10 +356,12 @@ Minimum viable workflow structure (API format):
 
 ## 12. Reading the live Fal catalog
 
-The `FalGenericAPI` `FAL_ENDPOINTS` list is a hardcoded snapshot. For the live
-catalog, fetch `https://fal.ai/models` or `https://fal.ai/explore/search?q=<term>`
-(HTML). The dropdown accepts any string, so newly released endpoints work
-without patching the list.
+Use `python tools/update_fal_catalog.py` to query the official
+`GET https://api.fal.ai/v1/models` endpoint, validate and snapshot active
+models, and regenerate capability-scoped dropdowns. Pass `--deploy-node-root`
+and `--deploy-workflows-dir` to update ComfyUI Desktop. Use Fal's
+`metadata.category` and the matching typed node. The legacy `FalGenericAPI`
+remains available only for old graphs and exceptional manual experiments.
 
 ## 13. Do NOT
 

@@ -24,7 +24,7 @@ Other files:
 4. Every workflow starts with placeholder values you should edit before running:
    - `LoadImage` nodes point to `example.png` - swap for your real input via the widget.
    - The prompt widget in the engine node holds a default architectural prompt - replace it.
-   - Fal generic/abstract workflows: the `endpoint` widget is a dropdown. Common values (verified live on fal.ai):
+   - Fal workflows use a capability-scoped `endpoint` dropdown. Common values (verified live on fal.ai):
      - **Screenshot/sketch/i2i edit:** `openai/gpt-image-2/edit`, `fal-ai/gpt-image-1.5/edit`, `fal-ai/flux-2/edit`, `fal-ai/flux-2-pro/edit`, `fal-ai/flux-2-max/edit`, `fal-ai/flux-pro/kontext`, `fal-ai/flux-pro/kontext/max`, `fal-ai/flux-kontext/dev`, `fal-ai/bytedance/seedream/v4.5/edit`, `fal-ai/bytedance/seedream/v5/lite/edit`, `xai/grok-imagine-image/quality/edit`, `fal-ai/qwen-image-edit-2511-multiple-angles`
      - **Abstract text-to-image:** `fal-ai/z-image/turbo`, `ideogram/v4`, `fal-ai/flux-2`, `fal-ai/flux-2/turbo`, `fal-ai/flux-2-pro`, `fal-ai/flux-pro/v1.1-ultra`, `openai/gpt-image-2`, `xai/grok-imagine-image`
      - **Krea (aesthetic):** `krea/v2/large/text-to-image` (best quality), `krea/v2/medium/text-to-image` (balanced), `krea/v2/medium/turbo/text-to-image` (fast), `fal-ai/krea-2/turbo` (newer)
@@ -35,7 +35,7 @@ Notes:
 - If a workflow does not appear after adding files, click the refresh icon in the ComfyUI Workflows sidebar, or restart ComfyUI Desktop.
 - Local upscale needs a `.pth` in `ComfyUI/models/upscale_models/` (see below).
 - The UI-format files live in `<ComfyUI>/user/default/workflows/` (this repo's `workflows_gui/`). The API-format twins in this repo's `workflows_api/` are for the CLI runner and are not shown in the UI sidebar.
-- The `FalGenericAPI` endpoint dropdown was refreshed against the live fal.ai catalog. If you add newer endpoints, either edit `custom_nodes/fal-api/nodes/generic_node.py` (`FAL_ENDPOINTS` list) and restart ComfyUI, or type the endpoint string directly into the workflow JSON - the frontend accepts any string, not just dropdown entries.
+- Do not edit the old `FalGenericAPI` list to add models. Run `python tools/update_fal_catalog.py` with `--deploy-node-root` and `--deploy-workflows-dir`. Typed nodes use Fal's official categories, so image, video, and 3D endpoints stay separated.
 
 ### Fast workflow chooser
 
@@ -147,7 +147,7 @@ These use Fal's video and 3D endpoints. **Output behavior is different from imag
 | `video_studio_fal` | Seedance 2.0 | text/image/first-last/reference -> video | Lazy-routed modes |
 | `video_veo3_text` | Google Veo3 | text -> video | Highest quality + native audio, 8s fixed |
 | `video_kling_image` | Kling Pro 1.6 | image+text -> video | Cinematic motion, optional tail-frame control |
-| `video_generic_fal` | any Fal video endpoint | swappable | Test Kling/Seedance/Veo/Wan/Hailuo with one graph |
+| `video_generic_fal` | cataloged image-to-video endpoints | swappable | Test compatible image-to-video families without mixing text/video-edit models |
 | `video_preview_from_url` | LoadVideoURL | utility | Paste any video URL to preview frames in-UI |
 
 **How to view the generated video:**
